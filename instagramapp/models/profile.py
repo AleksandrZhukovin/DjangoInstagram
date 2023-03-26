@@ -1,5 +1,5 @@
 from django.db import models
-from abstract import Abstract
+from .abstract import Abstract
 
 
 class Profile(Abstract):
