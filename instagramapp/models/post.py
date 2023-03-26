@@ -1,4 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
 from abstract import Abstract
 
+
+class Post(Abstract):
+    description = models.CharField(max_length=1000)
