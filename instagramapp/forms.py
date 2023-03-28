@@ -13,3 +13,7 @@ class ProfileEdit(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['status']
+
+
+class SearchForm(forms.Form):
+    search = forms.CharField()
