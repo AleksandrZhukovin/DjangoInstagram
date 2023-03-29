@@ -10,5 +10,9 @@ urlpatterns = [
     path('profile/', login_required(views.ProfileView.as_view()), name='profile'),
     path('add_post/', login_required(views.AddPostView.as_view()), name='add_post'),
     path('search/', views.SearchView.as_view(), name='search'),
-    path('search/<str:search>/', views.SearchResultView.as_view(), name='search_res')
+    path('search/<str:search>/', views.SearchResultView.as_view(), name='search_res'),
+    path('user_profile<int:pk>/', views.UserProfileView.as_view(), name='user_profile'),
+    path('follow<int:pk>/', views.FollowView.as_view(), name='follow'),
+    path('unfollow<int:pk>/', views.UnfollowView.as_view(), name='unfollow'),
+    path('add_post/edit_post<int:pk>/', views.EditPostView.as_view(), name='edit_post')
 ]
