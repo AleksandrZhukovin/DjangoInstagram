@@ -11,5 +11,11 @@
         <input value="Search" type="submit">
     </form>
 
+    {% if results %}
+        {% for p in results %}
+            <a href="/user_profile{{ p.id }}">{{ p.username }}</a>
+        {% endfor %}
+    {% endif %}
+
 </body>
 </html>
