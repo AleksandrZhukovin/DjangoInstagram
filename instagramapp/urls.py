@@ -14,5 +14,8 @@ urlpatterns = [
     path('user_profile<int:pk>/', views.UserProfileView.as_view(), name='user_profile'),
     path('follow<int:pk>/', views.FollowView.as_view(), name='follow'),
     path('unfollow<int:pk>/', views.UnfollowView.as_view(), name='unfollow'),
-    path('add_post/edit_post<int:pk>/', views.EditPostView.as_view(), name='edit_post')
+    path('add_post/edit_post<int:pk>/', views.EditPostView.as_view(), name='edit_post'),
+    path('post<int:pk>/', views.PostView.as_view(), name='post_view'),
+    path('add_like<int:pk>/', views.AddLikeView.as_view(), name='add_like'),
+    path('remove_like<int:pk>/', views.RemoveLikeView.as_view(), name='remove_like')
 ]

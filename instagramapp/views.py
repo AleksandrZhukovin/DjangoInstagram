@@ -1,9 +1,10 @@
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView, RedirectView
-from .models import Post, Profile
-from .forms import RegistrationForm, ProfileEdit, SearchForm
+from .models import Post, Profile, Comment, Like
+from .forms import RegistrationForm, ProfileEdit, SearchForm, CommentForm
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.list import ListView
@@ -158,3 +159,51 @@ class UnfollowView(RedirectView):
         f_user.save()
         self.url = '/user_profile{0}/'.format(pk)
         return super().get_redirect_url(*args, **kwargs)
+
+
+class PostView(CreateView):
+    template_name = 'post.html'
+    form_class = CommentForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        post = Post.objects.get(id=self.kwargs['pk'])
+        context['comments'] = Comment.objects.filter(user=user)
+        likes = []
+        for i in Like.objects.filter(post=post):
+            likes.append(i.user)
+        context['likes'] = likes
+        context['like_amount'] = len(list(Like.objects.filter(post=post)))
+        context['post'] = post
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.post = Post.objects.get(id=self.kwargs['pk'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return '/post{0}/'.format(self.kwargs['pk'])
+
+
+class AddLikeView(UpdateView):
+    model = Post
+
+    def dispatch(self, request, *args, **kwargs):
+        post = Post.objects.get(id=self.kwargs['pk'])
+        user = self.request.user
+        like = Like(post=post, user=user)
+        like.save()
+        return redirect('/post{0}/'.format(self.kwargs['pk']))
+
+
+class RemoveLikeView(UpdateView):
+    model = Post
+
+    def dispatch(self, request, *args, **kwargs):
+        post = Post.objects.get(id=self.kwargs['pk'])
+        user = self.request.user
+        like = Like.objects.get(post=post, user=user)
+        like.delete()
+        return redirect('/post{0}/'.format(self.kwargs['pk']))
