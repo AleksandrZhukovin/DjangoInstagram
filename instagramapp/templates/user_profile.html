@@ -15,7 +15,7 @@
     <p>Following: {{ following }}</p>
     {% if posts %}
         {% for p in posts %}
-            <img src="{{ p.image.url }}">
+            <a href='/post{{ p.id }}'><img src="{{ p.image.url }}" width="200"></a>
         {% endfor %}
     {% endif %}
 </body>

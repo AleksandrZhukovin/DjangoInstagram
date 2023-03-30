@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <img src="{{ post.image.url }}" width="800">
+    <p>{{ like_amount }} {% if user in likes %} <a href="/remove_like{{ post.id }}">-</a> {% else %} <a href="/add_like{{ post.id }}">+</a> {% endif %}</p>
+    {% if comments %}
+        <div style="overflow-y: scroll; height: 200px;">
+            {% for c in comments %}
+                <p>{{ c.body }}</p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No comments yet.</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Add">
+    </form>
+</body>
+</html>
