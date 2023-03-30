@@ -1,5 +1,6 @@
 from django import forms
-from .models import User, Profile
+from .models import Profile, Comment
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -17,3 +18,9 @@ class ProfileEdit(forms.ModelForm):
 
 class SearchForm(forms.Form):
     search = forms.CharField()
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
