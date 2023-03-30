@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if not personal %}
+        <a href="/edit_profile_personal{{ user.id }}">Edit Personal Information</a>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="OK">
+    </form>
+
+</body>
+</html>

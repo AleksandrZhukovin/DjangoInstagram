@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-
+    {% if profile.image.url %}
+    <img src="{{ profile.image.url }}" width="200">
+    {% endif %}
+    <h3>{{ user.username }}</h3>
+    <a href="/edit_profile{{ profile.id }}">Edit Profile</a>
 </body>
 </html>
