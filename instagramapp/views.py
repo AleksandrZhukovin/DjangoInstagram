@@ -25,6 +25,42 @@ class ProfileView(TemplateView):
         return context
 
 
+class EditProfileView(UpdateView):
+    model = Profile
+    template_name = 'edit_profile.html'
+    fields = ['status', 'location', 'image']
+    success_url = reverse_lazy('profile')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        profile = Profile.objects.get(id=self.kwargs['pk'])
+        initial['status'] = profile.status
+        initial['location'] = profile.location
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['personal'] = False
+        context['user'] = self.request.user
+        return context
+
+
+class EditProfilePersonalView(UpdateView):
+    model = User
+    template_name = 'edit_profile.html'
+    fields = ['username', 'first_name', 'last_name', 'email']
+    success_url = reverse_lazy('profile')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        user = self.request.user
+        initial['username'] = user.username
+        initial['first_name'] = user.first_name
+        initial['last_name'] = user.last_name
+        initial['email'] = user.email
+        return initial
+
+
 class RegistrationView(CreateView):
     form_class = RegistrationForm
     template_name = 'registration.html'
