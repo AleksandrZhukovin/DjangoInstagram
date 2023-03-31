@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView, RedirectView
 from .models import Post, Profile, Comment, Like
-from .forms import RegistrationForm, ProfileEdit, SearchForm, CommentForm
+from .forms import RegistrationForm, SearchForm, CommentForm
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.list import ListView
@@ -205,13 +205,21 @@ class PostView(CreateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         post = Post.objects.get(id=self.kwargs['pk'])
-        context['comments'] = Comment.objects.filter(user=user)
+        comments = []
+        n = 0
+        for c in Comment.objects.filter(user=user):
+            comments.append([c])
+            comments[n].append([i.user for i in Like.objects.filter(user=user.id, comment=c)])
+            comments[n].append(len(Like.objects.filter(comment=c)))
+        context['comments'] = comments
+        print(comments)
         likes = []
         for i in Like.objects.filter(post=post):
             likes.append(i.user)
         context['likes'] = likes
         context['like_amount'] = len(list(Like.objects.filter(post=post)))
         context['post'] = post
+
         return context
 
     def form_valid(self, form):
@@ -221,6 +229,36 @@ class PostView(CreateView):
 
     def get_success_url(self):
         return '/post{0}/'.format(self.kwargs['pk'])
+
+
+class DeleteCommentView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        comment = Comment.objects.get(id=self.kwargs['pk'])
+        comment.delete()
+        self.url = '/post{0}/'.format(self.kwargs['post_id'])
+        return super().get_redirect_url(*args, **kwargs)
+
+
+class AddCommentLikeView(UpdateView):
+    model = Comment
+
+    def dispatch(self, request, *args, **kwargs):
+        comment = Comment.objects.get(id=self.kwargs['comment_id'])
+        user = self.request.user
+        like = Like(comment=comment, user=user)
+        like.save()
+        return redirect('/post{0}/'.format(self.kwargs['pk']))
+
+
+class RemoveCommentLikeView(UpdateView):
+    model = Comment
+
+    def dispatch(self, request, *args, **kwargs):
+        comment = Comment.objects.get(id=self.kwargs['comment_id'])
+        user = self.request.user
+        like = Like.objects.get(comment=comment, user=user)
+        like.delete()
+        return redirect('/post{0}/'.format(self.kwargs['pk']))
 
 
 class AddLikeView(UpdateView):
