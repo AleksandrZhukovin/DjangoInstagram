@@ -10,7 +10,10 @@
     {% if comments %}
         <div style="overflow-y: scroll; height: 200px;">
             {% for c in comments %}
-                <p>{{ c.body }}</p>
+                <p>{{ c.0.body }} {{ c.2 }}
+                    {% if user in c.1 %}<a href="/remove_comment_like{{ post.id }}/{{ c.0.id }}/">-</a> {% else %} <a href="/add_comment_like{{ post.id }}/{{ c.0.id }}/">+</a> {% endif %}
+                    <a href="/delete_comment{{ c.id }}/{{ post.id }}/">Delete</a>
+                </p>
             {% endfor %}
         </div>
     {% else %}
