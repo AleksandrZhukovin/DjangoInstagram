@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if chats %}
+        {% for c in chats %}
+            <a href="/chat{{ c.id }}">Chat</a>
+        {% endfor %}
+    {% endif %}
+
+</body>
+</html>

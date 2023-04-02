@@ -13,6 +13,7 @@
     {% endif %}
     <p>Followers: {{ followers }}</p>
     <p>Following: {{ following }}</p>
+    <a  href="/start_chat{{ profile.user.id }}">Message</a>
     {% if posts %}
         {% for p in posts %}
             <a href='/post{{ p.id }}'><img src="{{ p.image.url }}" width="200"></a>
