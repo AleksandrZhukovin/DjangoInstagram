@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView, RedirectView
-from .models import Post, Profile, Comment, Like
+from .models import Post, Profile, Comment, Like, Message, Chat
 from .forms import RegistrationForm, SearchForm, CommentForm
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
@@ -281,3 +281,51 @@ class RemoveLikeView(UpdateView):
         like = Like.objects.get(post=post, user=user)
         like.delete()
         return redirect('/post{0}/'.format(self.kwargs['pk']))
+
+
+class ChatView(CreateView):
+    model = Message
+    template_name = 'chat.html'
+    fields = ['body']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.chat = Chat.objects.get(id=self.kwargs['chat'])
+        return super().form_valid(form)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['messages'] = Message.objects.filter(chat=self.kwargs['chat'])
+        return context
+
+    def get_success_url(self):
+        return '/chat{0}'.format(self.kwargs['chat'])
+
+
+class StartChatView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        user = self.request.user
+        user1 = User.objects.get(id=self.kwargs['user_id'])
+        for c in Chat.objects.all():
+            if user in c.members.all() and user1 in c.members.all():
+                self.url = '/chat{0}'.format(c.id)
+                break
+        else:
+            chat = Chat()
+            chat.save()
+            chat.members.add(user, user1)
+            self.url = '/chat{0}'.format(chat.id)
+        return super().get_redirect_url(*args, **kwargs)
+
+
+class ChatsView(TemplateView):
+    template_name = 'chats.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        chats = []
+        for c in Chat.objects.all():
+            if self.request.user in c.members.all():
+                chats.append(c)
+        context['chats'] = chats
+        return context

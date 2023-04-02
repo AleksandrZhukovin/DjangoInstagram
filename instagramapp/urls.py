@@ -22,5 +22,9 @@ urlpatterns = [
     path('edit_profile_personal<int:pk>/', views.EditProfilePersonalView.as_view(), name='edit_profile_personal'),
     path('delete_comment<int:pk>/<int:post_id>/', views.DeleteCommentView.as_view(), name='delete_comment'),
     path('add_comment_like<int:pk>/<int:comment_id>/', views.AddCommentLikeView.as_view(), name='add_comment_like'),
-    path('remove_comment_like<int:pk>/<int:comment_id>/', views.RemoveCommentLikeView.as_view(), name='remove_comment_like')
+    path('remove_comment_like<int:pk>/<int:comment_id>/', views.RemoveCommentLikeView.as_view(),
+         name='remove_comment_like'),
+    path('chat<int:chat>/', views.ChatView.as_view(), name='chat'),
+    path('start_chat<int:user_id>/', views.StartChatView.as_view(), name='start_chat'),
+    path('chats/', views.ChatsView.as_view(), name='chats')
 ]
