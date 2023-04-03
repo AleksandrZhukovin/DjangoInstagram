@@ -1,0 +1,41 @@
+.vl {
+  height: 100vh;
+  border-right: 1px solid #404040;
+}
+
+body {
+  background-color: rgb(0, 0, 0);
+}
+
+.nav:link, .nav:visited {
+  font-size: 17px;
+  outline: none;
+  border-radius: 25px;
+  text-decoration: none;
+  display: inline-block;
+  padding: 10px 20px;
+  text-align: left;
+  line-height: 3;
+  color: white;
+}
+
+
+.nav:hover, .nav:active {
+  font-size: 17px;
+  background: #101010;
+  color: white;
+}
+
+.profile-image {
+  border-radius: 50%;
+}
+
+.text {
+  color: white;
+}
+
+
+hr {
+  height: 3px;
+  background-color: #505050;
+}
