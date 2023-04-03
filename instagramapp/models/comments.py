@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from .post import Post
+from .profile import Profile
 
 
 class Comment(models.Model):
@@ -8,3 +9,4 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
