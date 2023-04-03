@@ -7,7 +7,6 @@ from .models import Post, Profile, Comment, Like, Message, Chat
 from .forms import RegistrationForm, SearchForm, CommentForm
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic.list import ListView
 
 
 class ProfileView(TemplateView):
@@ -16,8 +15,6 @@ class ProfileView(TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super().get_context_data(**kwargs)
-        if user.is_authenticated:
-            profile, created = Profile.objects.get_or_create(user=user)
         context['title'] = _('Profile {user}').format(user=user.username)
         context['user'] = user
         context['posts'] = Post.objects.filter(user=user)
@@ -82,9 +79,26 @@ class Logout(LogoutView):
     pass
 
 
-class HomeView(ListView):
-    model = Post
+class HomeView(TemplateView):
     template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        profile = None
+        if user.is_authenticated:
+            profile, created = Profile.objects.get_or_create(user=user)
+        posts = Post.objects.all()
+        wall = []
+        for p in posts:
+            if p.user in profile.following.all():
+                likes = []
+                for l in Like.objects.filter(post=p):
+                    likes.append(l.user)
+                wall.append([p, likes, len(likes)])
+        context['posts'] = wall
+        context['title'] = _('Home')
+        return context
 
 
 class AddPostView(CreateView):
@@ -93,7 +107,9 @@ class AddPostView(CreateView):
     fields = ['image']
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        user = self.request.user
+        form.instance.user = user
+        form.instance.profile = Profile.objects.get(user=user)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -223,8 +239,10 @@ class PostView(CreateView):
         return context
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        user = self.request.user
+        form.instance.user = user
         form.instance.post = Post.objects.get(id=self.kwargs['pk'])
+        form.instance.profile = Profile.objects.get(user=user)
         return super().form_valid(form)
 
     def get_success_url(self):
