@@ -1,0 +1,33 @@
+.insert_img {
+  width: 50%;
+  height: 60%;
+  border-radius: 10px;
+  background-color: #a8a8a8;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.insert_img img {
+    width: 50%;
+    height: 50%;
+    object-fit: contain;
+}
+
+.main {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.header{
+  font-size: 25px;
+  color: white;
+}
+
+.file_inpt {
+  color: white;
+  background-color: blue;
+  border-radius: 10px;
+  outline: none;
+}

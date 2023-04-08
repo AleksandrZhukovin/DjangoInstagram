@@ -1,0 +1,47 @@
+.fill {
+    display: flex;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
+
+.fill img {
+    height: 300px;
+    object-fit: cover;
+}
+
+.profile-image {
+  border-radius: 50%;
+}
+
+.profile_set:link, .profile_set:visited {
+  font-size: 15px;
+  outline: none;
+  text-decoration: none;
+  color: black;
+  border-radius: 5px;
+  background: white;
+  padding: 7px 15px;
+}
+
+.profile_set:hover, .profile_set:active {
+  background: #dcdbdb;
+  font-size: 15px;
+}
+
+.profile_fol:link, .profile_fol:visited {
+  font-size: 15px;
+  outline: none;
+  text-decoration: none;
+  color: black;
+  border-radius: 5px;
+  background: blue;
+  padding: 7px 15px;
+}
+
+.profile_fol:hover, .profile_fol:active {
+  background: rgb(0, 0, 190);
+  font-size: 15px;
+}

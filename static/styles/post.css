@@ -1,0 +1,57 @@
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: back;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: back;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: back;
+}
+
+.info {
+  color: #BDBDBD;
+}
+
+.sm_info {
+  color: #BDBDBD;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.form_e {
+  outline: none;
+  width: 90%;
+  background-color: black;
+  border: 0px solid;
+  color: white;
+}
+
+.btn_e {
+  outline: none;
+  background-color: black;
+  border: 0px solid;
+  color: white;
+}
+
+
+.center {
+  height: 100vh;
+  border-right: 1px solid #404040;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.post{
+  overflow: hidden;
+  position: relative;
+}
