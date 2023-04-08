@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView, RedirectView
 from .models import Post, Profile, Comment, Like, Message, Chat
-from .forms import RegistrationForm, SearchForm, CommentForm
+from .forms import RegistrationForm, SearchForm, CommentForm, AddPostForm, EditPostForm, LoginForm, EditProfileForm,\
+    ChatForm
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
 
@@ -14,11 +15,15 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         user = self.request.user
+        profile = Profile.objects.get(user=user)
         context = super().get_context_data(**kwargs)
         context['title'] = _('Profile {user}').format(user=user.username)
         context['user'] = user
         context['posts'] = Post.objects.filter(user=user)
-        context['profile'] = Profile.objects.get(user=user)
+        context['post_am'] = len(Post.objects.filter(user=user))
+        context['profile'] = profile
+        context['followers'] = len(profile.followers.all())
+        context['following'] = len(profile.following.all())
         return context
 
 
@@ -45,7 +50,7 @@ class EditProfileView(UpdateView):
 class EditProfilePersonalView(UpdateView):
     model = User
     template_name = 'edit_profile.html'
-    fields = ['username', 'first_name', 'last_name', 'email']
+    form_class = EditProfileForm
     success_url = reverse_lazy('profile')
 
     def get_initial(self):
@@ -73,6 +78,7 @@ class Login(LoginView):
     template_name = 'login.html'
     redirect_authenticated_user = True
     extra_context = {'title': _('Log In')}
+    form_class = LoginForm
 
 
 class Logout(LogoutView):
@@ -98,13 +104,15 @@ class HomeView(TemplateView):
                 wall.append([p, likes, len(likes)])
         context['posts'] = wall
         context['title'] = _('Home')
+        context['user'] = user
+        context['profile'] = profile
         return context
 
 
 class AddPostView(CreateView):
     model = Post
     template_name = 'add_post.html'
-    fields = ['image']
+    form_class = AddPostForm
 
     def form_valid(self, form):
         user = self.request.user
@@ -124,7 +132,7 @@ class AddPostView(CreateView):
 class EditPostView(UpdateView):
     model = Post
     template_name = 'add_post.html'
-    fields = ['image', 'description']
+    form_class = EditPostForm
     success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
@@ -147,6 +155,7 @@ class SearchView(FormView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = _('Search')
+        context['profile'] = Profile.objects.get(user=self.request.user)
         return context
 
     def get_success_url(self):
@@ -161,7 +170,12 @@ class SearchResultView(SearchView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['results'] = User.objects.filter(username__contains=self.kwargs['search'])
+        users = User.objects.filter(username__contains=self.kwargs['search'])
+        profiles = []
+        for u in users:
+            profiles.append(Profile.objects.get(user=u))
+        context['results'] = profiles
+        context['profile'] = Profile.objects.get(user=self.request.user)
         return context
 
 
@@ -182,6 +196,7 @@ class UserProfileView(TemplateView):
         context['following'] = len(Profile.objects.get(user=user).following.all())
         context['user'] = current_user
         context['posts'] = Post.objects.filter(user=user)
+        context['post_am'] = len(Post.objects.filter(user=user))
         return context
 
 
@@ -228,14 +243,14 @@ class PostView(CreateView):
             comments[n].append([i.user for i in Like.objects.filter(user=user.id, comment=c)])
             comments[n].append(len(Like.objects.filter(comment=c)))
         context['comments'] = comments
-        print(comments)
         likes = []
         for i in Like.objects.filter(post=post):
             likes.append(i.user)
         context['likes'] = likes
         context['like_amount'] = len(list(Like.objects.filter(post=post)))
         context['post'] = post
-
+        context['title'] = _('Post')
+        context['profile'] = Profile.objects.get(user=post.user)
         return context
 
     def form_valid(self, form):
@@ -304,7 +319,7 @@ class RemoveLikeView(UpdateView):
 class ChatView(CreateView):
     model = Message
     template_name = 'chat.html'
-    fields = ['body']
+    form_class = ChatForm
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -314,6 +329,7 @@ class ChatView(CreateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['messages'] = Message.objects.filter(chat=self.kwargs['chat'])
+        context['user'] = self.request.user
         return context
 
     def get_success_url(self):
@@ -341,9 +357,13 @@ class ChatsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = self.request.user
         chats = []
         for c in Chat.objects.all():
-            if self.request.user in c.members.all():
-                chats.append(c)
+            if user in c.members.all():
+                for u in c.members.all():
+                    if u != user:
+                        chats.append([c, Profile.objects.get(user=u)])
+        context['profile'] = Profile.objects.get(user=user)
         context['chats'] = chats
         return context
