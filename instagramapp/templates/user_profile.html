@@ -2,22 +2,84 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/styles/profile.css" type="text/css">
+    <link rel="stylesheet" href="/static/styles/base.css" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        .profile_fol:link, .profile_fol:visited {
+          font-size: 15px;
+          outline: none;
+          text-decoration: none;
+          color: white;
+          border-radius: 5px;
+          background: blue;
+          padding: 7px 15px;
+        }
+
+        .profile_fol:hover, .profile_fol:active {
+          background: rgb(0, 0, 190);
+          font-size: 15px;
+        }
+
+        .profile_unfol:link, .profile_unfol:visited {
+          font-size: 15px;
+          outline: none;
+          text-decoration: none;
+          color: white;
+          border-radius: 5px;
+          padding: 7px 15px;
+          border: 3px solid white;
+        }
+
+        .profile_unfol:hover, .profile_unfol:active {
+          border: 3px solid #B3B3B3;
+          font-size: 15px;
+        }
+
+    </style>
 </head>
-<body>
-    <h4>{{ profile.user.username }}</h4>
-    {% if not follow %}
-        <a href="/unfollow{{ profile.user.id }}/">UnFollow</a>
-    {% else %}
-        <a href="/follow{{ profile.user.id }}/">Follow</a>
-    {% endif %}
-    <p>Followers: {{ followers }}</p>
-    <p>Following: {{ following }}</p>
-    <a  href="/start_chat{{ profile.user.id }}">Message</a>
-    {% if posts %}
-        {% for p in posts %}
-            <a href='/post{{ p.id }}'><img src="{{ p.image.url }}" width="200"></a>
-        {% endfor %}
-    {% endif %}
+<body class="body_back">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 col-lg-2 vl">
+                <a href="/"><img class="my-5 mx-3" src="/static/design/logo.png" width="150"></a>
+                <a class='nav' href="/profile">Profile</a><br>
+                <a class='nav' href="/add_post">Add Post</a><br>
+                <a class='nav' href="/logout">Logout</a><br>
+                <a class='nav' href="/search">Search</a><br>
+                <a class='nav' href="/chats">Chats</a><br>
+            </div>
+            <div class='col-md-10 col-lg-10 my-3'>
+                <div style="display: flex;" class="block">
+                    <div class="my-3" style="padding-left: 25%">
+                        <img  src="{{ profile.image.url }}" width="200">
+                    </div>
+                    <div style="padding-left: 5%;" class="my-5">
+                        {% if not follow %}
+                            <a class="profile_unfol" href="/unfollow{{ profile.user.id }}/"><b>UnFollow</b></a>
+                        {% else %}
+                            <a class="profile_fol" href="/follow{{ profile.user.id }}/"><b>Follow</b></a>
+                        {% endif %}
+                        <a class="profile_fol mx-2" href="/start_chat{{ profile.user.id }}"><b>Message</b></a>
+                        <p class="text my-3"><b>{{ post_am }}</b> posts <b style="padding-left: 15px;">{{ followers }}</b> followers <b style="padding-left: 15px;">{{ following }}</b> following</p>
+                        <p class="text my-3"><b>{{ user.first_name}} {{ user.last_name }}</b><br>{{ profile.status }}</p>
+                    </div>
+                </div>
+                <div>
+                    <p class="my-3 text-center text">Posts</p>
+                </div>
+                <div style="display: flex; padding-left: 18%; width: 910px;">
+                    {% if posts %}
+                        {% for p in posts %}
+                            <div class="fill mx-1">
+                                <a href="/post{{ p.id }}"><img src="{{ p.image.url }}"></a>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
