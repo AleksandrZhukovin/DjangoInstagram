@@ -1,13 +1,18 @@
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
+from django.contrib.sessions.backends.db import SessionStore
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView, RedirectView
 from .models import Post, Profile, Comment, Like, Message, Chat
-from .forms import RegistrationForm, SearchForm, CommentForm, AddPostForm, EditPostForm, LoginForm, EditProfileForm,\
+from .forms import RegistrationForm, SearchForm, CommentForm, AddPostForm, EditPostForm, LoginForm, EditProfileForm, \
     ChatForm
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
+
+session = SessionStore()
+session['like_amount'] = 0
 
 
 class ProfileView(TemplateView):
@@ -232,6 +237,16 @@ class PostView(CreateView):
     template_name = 'post.html'
     form_class = CommentForm
 
+    def post(self, request, *args, **kwargs):
+        post = Post.objects.get(id=self.kwargs['pk'])
+        user = self.request.user
+        like = Like(post=post, user=user)
+        like.save()
+
+        data = {'status': 'success', 'like_amount': len(Like.objects.filter(post=post))}
+        print(1)
+        return JsonResponse(data, safe=False)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
@@ -247,7 +262,7 @@ class PostView(CreateView):
         for i in Like.objects.filter(post=post):
             likes.append(i.user)
         context['likes'] = likes
-        context['like_amount'] = len(list(Like.objects.filter(post=post)))
+        context['like_amount'] = len(Like.objects.filter(post=post))
         context['post'] = post
         context['title'] = _('Post')
         context['profile'] = Profile.objects.get(user=post.user)
@@ -302,7 +317,14 @@ class AddLikeView(UpdateView):
         user = self.request.user
         like = Like(post=post, user=user)
         like.save()
-        return redirect('/post{0}/'.format(self.kwargs['pk']))
+        likes = []
+        context = {}
+        for i in Like.objects.filter(post=post):
+            likes.append(i.user)
+
+        session['like_amount'] = len(list(Like.objects.filter(post=post)))
+        print('ok')
+        return JsonResponse()
 
 
 class RemoveLikeView(UpdateView):
@@ -313,7 +335,13 @@ class RemoveLikeView(UpdateView):
         user = self.request.user
         like = Like.objects.get(post=post, user=user)
         like.delete()
-        return redirect('/post{0}/'.format(self.kwargs['pk']))
+        likes = []
+        context = {}
+        for i in Like.objects.filter(post=post):
+            likes.append(i.user)
+        session['like_amount'] = len(list(Like.objects.filter(post=post)))
+
+        return render(request, 'post.html', context)
 
 
 class ChatView(CreateView):
