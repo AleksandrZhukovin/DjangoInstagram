@@ -1,7 +1,4 @@
-
-
 function processLike(){
-
     $('.like').click(function(){
     var like = $(this);
     $.ajax(like.data('url'), {
@@ -10,7 +7,7 @@ function processLike(){
         'dataType': 'json',
         'data': {
             'pk': like.data('id'),
-            'body': '1'
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'success': function(data){
             var d = data['like_amount'];
@@ -26,10 +23,8 @@ function processLike(){
                 document.getElementById('image').src = '/static/design/like.png';
             }
             $.cookie('like'+like.data('id'), is_like, {'expires': 1000000});
-
         }
     })
-
     })
 }
 
@@ -43,9 +38,16 @@ function addComment(){
         'dataType': 'json',
         'data': {
             'pk': comment_btn.data('id'),
-            'body': '1'
+            'body': $('.form_e').val(),
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
-        'success': alert('success')
+        'success':  function(data){
+            document.getElementById('comment').innerHTML = data;
+            document.getElementById('comment').removeAttribute('id');
+            var newBlock = document.createElement("id");
+            newBlock.setAttribute("id", 'comment');
+            document.getElementById('comments').appendChild(newBlock);
+        }
         })
     })
 }
@@ -63,3 +65,4 @@ $(document).ready(function(){
     addComment();
     processLike();
 });
+

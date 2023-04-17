@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
@@ -234,15 +235,24 @@ class PostView(CreateView):
     form_class = CommentForm
 
     def post(self, request, *args, **kwargs):
+        post_data = request.POST
         post = Post.objects.get(id=self.kwargs['pk'])
         user = self.request.user
+        profile = Profile.objects.get(user=user)
         cookie = request.COOKIES.get('like'+str(post.id))
-        if cookie == '1':
+        if cookie == '1' and ('body' not in post_data.keys()):
             like = Like.objects.get(user=user, post=post)
             like.delete()
-        else:
+        elif 'body' not in post_data.keys():
             like = Like(post=post, user=user)
             like.save()
+        if 'body' in post_data.keys():
+            comment = Comment(body=post_data['body'], user=user, profile=profile, post=post)
+            comment.save()
+            comment_info = {'user': user, 'body': post_data['body'], 'profile': profile,
+                            'like_am': 0}
+            block = render_to_string('comment_template.html', comment_info)
+            return JsonResponse(block, safe=False)
         data = {'status': 'success', 'like_amount': len(Like.objects.filter(post=post))}
         return JsonResponse(data, safe=False)
 
@@ -266,16 +276,6 @@ class PostView(CreateView):
         context['title'] = _('Post')
         context['profile'] = Profile.objects.get(user=post.user)
         return context
-
-    def form_valid(self, form):
-        user = self.request.user
-        form.instance.user = user
-        form.instance.post = Post.objects.get(id=self.kwargs['pk'])
-        form.instance.profile = Profile.objects.get(user=user)
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return '/post{0}/'.format(self.kwargs['pk'])
 
 
 class DeleteCommentView(RedirectView):
