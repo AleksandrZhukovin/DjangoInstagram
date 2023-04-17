@@ -35,13 +35,22 @@
   color: white;
 }
 
-.btn_e {
+.btn_add {
+  font-size: 15px;
   outline: none;
-  background-color: black;
-  border: 0px solid;
+  text-decoration: none;
   color: white;
+  background-color: black;
+  border: 0px;
 }
 
+.btn_add:hover, .btn_add:active {
+    color: #BDBDBD;
+    font-size: 15px;
+    background-color: black;
+    outline: none;
+    border: 0px;
+}
 
 .center {
   height: 100vh;
