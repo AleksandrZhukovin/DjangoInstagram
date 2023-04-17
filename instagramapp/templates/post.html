@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
-{% block import %}<script src="/static/js/post.js" type="text/javascript"></script>{% endblock %}
+{% block import %}
+<script src="/static/js/post.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/static/styles/post.css" type="text/css">
+{% endblock %}
 
 {% block content %}
 <body class="body_back">
-
     <div class="container">
         <div class="row">
             <div class="col-md-7 col-lg-7 center">
@@ -16,55 +18,47 @@
                 </div>
                 <div class="block">
                     <p class="text"><a class="profile_link" href="/user_profile{{ post.user.id }}"><img class="profile-image my-2" src="{{ profile.image.url }}" width="45" height="45"><b class="mx-2">{{ post.user.username }}</b></a> {{ post.description }}</p>
-                     {% if comments %}
-                        <div style="overflow-y: scroll; height: 400px;">
+                        <div style="overflow-y: scroll; height: 400px;" id="comments">
                             {% for c in comments %}
-                                <div style="display: flex;">
-                                    <div>
-                                        <a href="/user_profile{{ c.0.user.id }}"><img class="profile-image my-2" src="{{ c.0.profile.image.url }}" width="35" height="35"></a>
-                                    </div>
-                                    <div style="width: 500px;">
-                                        <p class="text"><a class="profile_link" href="/user_profile{{ c.0.user.id }}"><b class="mx-2">{{ c.0.user.username }}</b></a>
-                                            {{ c.0.body }}<br><a class="sm_info mx-2" href="/delete_comment{{ c.0.id }}/{{ post.id }}/">Delete</a>
-                                        </p>
-                                    </div>
+                                <div>
                                     <div style="display: flex;">
                                         <div>
-                                            <p class="sm_info mx-2">{{ c.2 }}</p>
+                                            <a href="/user_profile{{ c.0.user.id }}"><img class="profile-image my-2" src="{{ c.0.profile.image.url }}" width="35" height="35"></a>
                                         </div>
-                                        <div>
-                                            {% if user in c.1 %}
-                                                <a href="/remove_comment_like{{ post.id }}/{{ c.0.id }}/"><img class="mb-2" src="/static/design/a_like.png" width="12"></a>
-                                            {% else %}
+                                        <div style="width: 500px;">
+                                            <p class="text"><a class="profile_link" href="/user_profile{{ c.0.user.id }}"><b class="mx-2">{{ c.0.user.username }}</b></a>
+                                                {{ c.0.body }}<br><a class="sm_info mx-2" href="/delete_comment{{ c.0.id }}/{{ post.id }}/">Delete</a>
+                                            </p>
+                                        </div>
+                                        <div style="display: flex;">
+                                            <div>
+                                                <p class="sm_info mx-2">{{ c.2 }}</p>
+                                            </div>
+                                            <div>
                                                 <a href="/add_comment_like{{ post.id }}/{{ c.0.id }}/"><img class="mb-2" src="/static/design/like.png" width="12"></a>
-                                            {% endif %}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             {% endfor %}
+                            <div id="comment"></div>
                         </div>
-                    {% else %}
-                        <p class="info text-center">No comments yet.</p>
-                    {% endif %}
-
                 </div>
                 <div class="block my-2">
-
                     <a data-url="/post{{ post.id }}/" data-id="{{ post.id }}" class="like">
-                        <img id="image" data-id="{{ post.id }}" data-url="/post{{ post.id }}/" src="{{ src }}" width="23">
+                        <img id="image" data-id="{{ post.id }}" data-url="/post{{ post.id }}/" src="" width="23">
                     </a>
                     <a class="mx-2 my-2" href="/post{{ p.0.id }}"><img src="/static/design/comment.png" width="23"></a>
                     <p class="my-2 text"><b id="like">{{ like_amount }}</b> likes</p>
-
                     <p class="info">{{ post.created_at }}</p>
                 </div>
                 <div>
-                    <form method="post">
+                    <form>
                         {% csrf_token %}
                         {% for f in form %}
                         {{ f }}
                         {% endfor %}
-                        <input type="submit" class="btn_e" value="Add">
+                        <button id="input" class="btn_add" data-url="/post{{ post.id }}/" data-id="{{ post.id }}">Add</button>
                     </form>
                 </div>
             </div>
