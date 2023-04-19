@@ -43,32 +43,30 @@ function addComment(){
         },
         'success':  function(data){
             document.getElementById('comment').innerHTML = data;
-            document.getElementById('comment').removeAttribute('id');
-            var newBlock = document.createElement("id");
-            newBlock.setAttribute("id", 'comment');
-            document.getElementById('comments').appendChild(newBlock);
+            document.getElementById('id_body').value = '';
         }
         })
     })
 }
 
 function deleteComment(){
-    $('#delete_comment').click(function(){
-        var del_btn = $(this);
-        $.ajax(del_btn.data('url'), {
-            'type': 'POST';
+    var b_id = 0;
+    $(document).click(function(event) {
+        b_id = $(event.target);
+        $.ajax(b_id.data('url'), {
+            'type': 'POST',
             'async': true,
             'dataType': 'json',
             'data': {
-                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
-                'delete_comment': del_btn.data('id')
+                'delete_comment': b_id.data('id'),
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
             },
             'success': function(data){
-                document.getElementById(data['id']).remove();
+                document.getElementById(String(data['id'])).remove();
             }
         })
-    })
-}
+      })
+    }
 
 $(document).ready(function(){
     var like = $('#image');
@@ -80,7 +78,6 @@ $(document).ready(function(){
     } else {
         document.getElementById('image').src = '/static/design/a_like.png';
     }
-    deleteComment();
     addComment();
     processLike();
 });
