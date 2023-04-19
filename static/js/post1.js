@@ -7,6 +7,7 @@ function processLike(){
         'dataType': 'json',
         'data': {
             'pk': like.data('id'),
+            'add_like': 1,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'success': function(data){
@@ -29,7 +30,6 @@ function processLike(){
 }
 
 function addComment(){
-
     $('#input').click(function(){
         var comment_btn = $(this);
         $.ajax(comment_btn.data('url'),{
@@ -52,6 +52,24 @@ function addComment(){
     })
 }
 
+function deleteComment(){
+    $('#delete_comment').click(function(){
+        var del_btn = $(this);
+        $.ajax(del_btn.data('url'), {
+            'type': 'POST';
+            'async': true,
+            'dataType': 'json',
+            'data': {
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                'delete_comment': del_btn.data('id')
+            },
+            'success': function(data){
+                document.getElementById(data['id']).remove();
+            }
+        })
+    })
+}
+
 $(document).ready(function(){
     var like = $('#image');
     if (typeof $.cookie('like'+like.data('id')) == 'undefined') {
@@ -62,6 +80,7 @@ $(document).ready(function(){
     } else {
         document.getElementById('image').src = '/static/design/a_like.png';
     }
+    deleteComment();
     addComment();
     processLike();
 });

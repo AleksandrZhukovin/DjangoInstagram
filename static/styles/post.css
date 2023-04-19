@@ -24,7 +24,18 @@
 .sm_info {
   color: #BDBDBD;
   font-size: 12px;
+  outline: none;
   text-decoration: none;
+  background-color: black;
+  border: 0px;
+}
+
+.sm_info:hover {
+    color: #B2B2B2;
+    outline: none;
+    text-decoration: none;
+    background-color: black;
+    border: 0px;
 }
 
 .form_e {

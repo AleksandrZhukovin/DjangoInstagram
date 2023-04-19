@@ -1,18 +1,20 @@
-<div style="display: flex;">
-    <div>
-        <a href="/user_profile{{ user.id }}"><img class="profile-image my-2" src="{{ profile.image.url }}" width="35" height="35"></a>
-    </div>
-    <div style="width: 500px;">
-        <p class="text"><a class="profile_link" href="/user_profile{{ c.0.user.id }}"><b class="mx-2">{{ user.username }}</b></a>
-            {{ body }}<br><a class="sm_info mx-2" href="/delete_comment{{ c.0.id }}/{{ post.id }}/">Delete</a>
-        </p>
-    </div>
+<div id="{{ comment.id }}">
     <div style="display: flex;">
         <div>
-            <p class="sm_info mx-2">{{ like_am }}</p>
+            <a href="/user_profile{{ user.id }}"><img class="profile-image my-2" src="{{ profile.image.url }}" width="35" height="35"></a>
         </div>
-        <div>
-            <a href="/add_comment_like{{ post.id }}/{{ c.0.id }}/"><img class="mb-2" src="/static/design/like.png" width="12"></a>
+        <div style="width: 500px;">
+            <p class="text"><a class="profile_link" href="/user_profile{{ c.0.user.id }}"><b class="mx-2">{{ user.username }}</b></a>
+                {{ comment.body }}<br><a class="sm_info mx-2" id="delete_comment{{ comment.id }}" data-url="/post{{ post.id }}/" data-id="{{ comment.id }}" onclick="deleteComment()">Delete</a>
+            </p>
+        </div>
+        <div style="display: flex;">
+            <div>
+                <p class="sm_info mx-2">{{ like_am }}</p>
+            </div>
+            <div>
+                <a href="/add_comment_like{{ post.id }}/{{ c.0.id }}/"><img class="mb-2" src="/static/design/like.png" width="12"></a>
+            </div>
         </div>
     </div>
 </div>
