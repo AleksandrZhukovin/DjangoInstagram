@@ -240,19 +240,25 @@ class PostView(CreateView):
         user = self.request.user
         profile = Profile.objects.get(user=user)
         cookie = request.COOKIES.get('like'+str(post.id))
-        if cookie == '1' and ('body' not in post_data.keys()):
+        if cookie == '1' and 'add_like' in post_data.keys():
             like = Like.objects.get(user=user, post=post)
             like.delete()
-        elif 'body' not in post_data.keys():
+        elif 'add_like' in post_data.keys():
             like = Like(post=post, user=user)
             like.save()
         if 'body' in post_data.keys():
             comment = Comment(body=post_data['body'], user=user, profile=profile, post=post)
             comment.save()
-            comment_info = {'user': user, 'body': post_data['body'], 'profile': profile,
-                            'like_am': 0}
+            comment_info = {'user': user, 'profile': profile,
+                            'like_am': 0, 'post': post, 'comment': comment}
             block = render_to_string('comment_template.html', comment_info)
             return JsonResponse(block, safe=False)
+        if 'delete_comment' in post_data.keys():
+            comment = Comment.objects.get(id=int(post_data['delete_comment']))
+            comment_id = comment.id
+            comment.delete()
+            data = {'id': comment_id}
+            return JsonResponse(data, safe=False)
         data = {'status': 'success', 'like_amount': len(Like.objects.filter(post=post))}
         return JsonResponse(data, safe=False)
 
@@ -262,7 +268,7 @@ class PostView(CreateView):
         post = Post.objects.get(id=self.kwargs['pk'])
         comments = []
         n = 0
-        for c in Comment.objects.filter(user=user):
+        for c in Comment.objects.filter(user=user, post=post):
             comments.append([c])
             comments[n].append([i.user for i in Like.objects.filter(user=user.id, comment=c)])
             comments[n].append(len(Like.objects.filter(comment=c)))
@@ -276,14 +282,6 @@ class PostView(CreateView):
         context['title'] = _('Post')
         context['profile'] = Profile.objects.get(user=post.user)
         return context
-
-
-class DeleteCommentView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        comment = Comment.objects.get(id=self.kwargs['pk'])
-        comment.delete()
-        self.url = '/post{0}/'.format(self.kwargs['post_id'])
-        return super().get_redirect_url(*args, **kwargs)
 
 
 class AddCommentLikeView(UpdateView):
