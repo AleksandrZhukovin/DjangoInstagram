@@ -20,22 +20,25 @@
                     <p class="text"><a class="profile_link" href="/user_profile{{ post.user.id }}"><img class="profile-image my-2" src="{{ profile.image.url }}" width="45" height="45"><b class="mx-2">{{ post.user.username }}</b></a> {{ post.description }}</p>
                         <div style="overflow-y: scroll; height: 400px;" id="comments">
                             {% for c in comments %}
-                                <div id="{{ c.0.id }}">
+                                <div id="{{ c.0.id }}" class="comment">
+                                    <input type="hidden" class="is_liked" data-for="{{ c.1 }}">
                                     <div style="display: flex;">
                                         <div>
                                             <a href="/user_profile{{ c.0.user.id }}"><img class="profile-image my-2" src="{{ c.0.profile.image.url }}" width="35" height="35"></a>
                                         </div>
                                         <div style="width: 500px;">
                                             <p class="text"><a class="profile_link" href="/user_profile{{ c.0.user.id }}"><b class="mx-2">{{ c.0.user.username }}</b></a>
-                                                {{ c.0.body }}<br><button class="sm_info mx-2" id="delete_comment{{ c.0.id }}" data-url="/post{{ post.id }}/" data-id="{{ c.0.id }}" onclick="deleteComment()">Delete</button>
+                                                {{ c.0.body }}<br><button class="sm_info mx-2" id="delete_comment{{ c.0.id }}" data-url="/post{{ post.id }}/" data-id="{{ c.0.id }}">Delete</button>
                                             </p>
                                         </div>
-                                        <div style="display: flex;">
+                                        <div class="comment_like" data-id="{{ c.0.id }}" style="display: flex;">
                                             <div>
                                                 <p class="sm_info mx-2">{{ c.2 }}</p>
                                             </div>
                                             <div>
-                                                <a href="/add_comment_like{{ post.id }}/{{ c.0.id }}/"><img class="mb-2" src="/static/design/like.png" width="12"></a>
+                                                <a class="comment_like_btn" data-url="/post{{ post.id }}/" data-id="{{ c.0.id }}">
+                                                    <img data-url="/post{{ post.id }}/" data-id="{{ c.0.id }}" class="comment_like mb-2" src="" width="12">
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
