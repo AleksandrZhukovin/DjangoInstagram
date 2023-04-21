@@ -42,51 +42,18 @@ function addComment(){
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'success':  function(data){
-            document.getElementById('comment').innerHTML = data;
             document.getElementById('id_body').value = '';
+            var div = document.createElement('div');
+            div.innerHTML = data.trim();
+            document.getElementById('comments').appendChild(div);
         }
         })
     })
 }
 
-function likeComment(){
-    var b_id = 0;
-    $(document).click(function(event) {
-        b_id = $(event.target);
-        $.ajax(b_id.data('url'), {
-            'type': 'POST',
-            'async': true,
-            'dataType': 'json',
-            'data': {
-                'like_comment': b_id.data('id'),
-                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
-            },
-            'success': function(data){
-                var elements = document.getElementsByClassName('comment_like_btn');
-                for (var i=0; i < elements.length; i++) {
-                    if (elements.item(i).getAttribute('data-id') == data['id']) {
-                        elements.item(i).getElementsByClassName('sm_info mx-2').innerHTML = data['like_am'];
-                        var is_like = 0;
-                        if ($.cookie('comment_like'+elements.item(i).getAttribute('data-id')) == 0) {
-                            is_like = 1;
-                            elements.item(i).getElementsByClassName('comment_like_btn').innerHTML = '/static/design/a_like.png';
-                        } else {
-                            is_like = 0;
-                            elements.item(i).getElementsByClassName('comment_like_btn').innerHTML = '/static/design/a_like.png';
-                        }
-                        $.cookie('comment_like'+elements.item(i).getAttribute('data-id'), is_like, {'expires': 1000000});
-                    }
-                }
-            }
-        })
-      })
-    }
-
-
-function deleteComment(){
-    var b_id = 0;
-    $(document).click(function(event) {
-        b_id = $(event.target);
+$(document).click(function(event) {
+    b_id = $(event.target);
+    if (b_id.attr('class') == "sm_info mx-2") {
         $.ajax(b_id.data('url'), {
             'type': 'POST',
             'async': true,
@@ -98,24 +65,46 @@ function deleteComment(){
             'success': function(data){
                 document.getElementById(String(data['id'])).remove();
             }
+    })} else if (b_id.attr('class') == "comment_like mb-2") {
+        $.ajax(b_id.data('url'), {
+        'type': 'POST',
+        'async': true,
+        'dataType': 'json',
+        'data': {
+            'like_comment': b_id.data('id'),
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'success': function(data){
+            var elements = document.getElementsByClassName('comment');
+            for (var i=0; i < elements.length; i++) {
+                if (elements.item(i).getElementsByClassName('comment_like').item(0).getAttribute('data-id') == data['id']) {
+                    if (data['is_liked'] == 0) {
+                        elements.item(i).getElementsByClassName('is_liked').item(0).dataset.for = 0;
+                        elements.item(i).getElementsByClassName("comment_like mb-2").item(0).src = "/static/design/like.png";
+                        elements.item(i).getElementsByClassName("sm_info mx-2").item(1).innerHTML = data['like_am'];
+                    } else {
+                        elements.item(i).getElementsByClassName('is_liked').item(0).dataset.for = 1;
+                        elements.item(i).getElementsByClassName("comment_like mb-2").item(0).src = "/static/design/a_like.png";
+                        elements.item(i).getElementsByClassName("sm_info mx-2").item(1).innerHTML = data['like_am'];
+                    }
+                }
+            }
+                }
+
         })
-      })
     }
+    })
 
 $(document).ready(function(){
-    var elements = document.getElementsByClassName('comment_like_btn');
+    var elements = document.getElementsByClassName('comment');
     for (var i=0; i < elements.length; i++) {
-        console.log(elements.item(i).getElementsByClassName('mb-2'));
-        if (typeof $.cookie('comment_like'+elements.item(i).getAttribute('data-id')) == 'undefined') {
-        $.cookie('comment_like'+elements.item(i).getAttribute('data-id'), 0, {'expires': 1000000});
-        }
-        if ($.cookie('comment_like'+elements.item(i).getAttribute('data-id')) == 0) {
-            elements.item(i).innerHTML = '<img class="mb-2" src="/static/design/like.png" width="12">';
+        if (elements.item(i).getElementsByClassName('is_liked').item(0).getAttribute('data-for') == 0) {
+            elements.item(i).getElementsByClassName("comment_like mb-2").item(0).src = "/static/design/like.png";
         } else {
-            elements.item(i).innerHTML = '<img class="mb-2" src="/static/design/a_like.png" width="12">';
+            elements.item(i).getElementsByClassName("comment_like mb-2").item(0).src = "/static/design/a_like.png";
         }
     }
-    console.log($.cookie('comment_like146'))
+
     var like = $('#image');
     if (typeof $.cookie('like'+like.data('id')) == 'undefined') {
         $.cookie('like'+like.data('id'), 0, {'expires': 1000000});
@@ -128,4 +117,3 @@ $(document).ready(function(){
     addComment();
     processLike();
 });
-
