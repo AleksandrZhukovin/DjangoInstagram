@@ -231,7 +231,7 @@ class UnfollowView(RedirectView):
 
 
 class PostView(CreateView):
-    template_name = 'post.html'
+    template_name = 'post1.html'
     form_class = CommentForm
 
     def post(self, request, *args, **kwargs):
@@ -259,6 +259,19 @@ class PostView(CreateView):
             comment.delete()
             data = {'id': comment_id}
             return JsonResponse(data, safe=False)
+        if 'like_comment' in post_data.keys():
+            try:
+                comment = Comment.objects.get(id=int(post_data['like_comment']))
+                like = Like.objects.get(user=user, comment=comment)
+                like.delete()
+                data = {'like_am': len(Like.objects.filter(comment=comment)), 'id': comment.id, 'is_liked': 0}
+                return JsonResponse(data, safe=False)
+            except Like.DoesNotExist:
+                comment = Comment.objects.get(id=int(post_data['like_comment']))
+                like = Like(comment=comment, user=user)
+                like.save()
+                data = {'like_am': len(Like.objects.filter(comment=comment)), 'id': comment.id, 'is_liked': 1}
+                return JsonResponse(data, safe=False)
         data = {'status': 'success', 'like_amount': len(Like.objects.filter(post=post))}
         return JsonResponse(data, safe=False)
 
@@ -270,8 +283,14 @@ class PostView(CreateView):
         n = 0
         for c in Comment.objects.filter(user=user, post=post):
             comments.append([c])
-            comments[n].append([i.user for i in Like.objects.filter(user=user.id, comment=c)])
+            try:
+                Like.objects.get(comment=c, user=user)
+                comments[n].append(1)
+            except Like.DoesNotExist:
+                comments[n].append(0)
             comments[n].append(len(Like.objects.filter(comment=c)))
+            n += 1
+        print(comments)
         context['comments'] = comments
         likes = []
         for i in Like.objects.filter(post=post):
