@@ -43,15 +43,18 @@ function addComment(){
         },
         'success':  function(data){
             document.getElementById('id_body').value = '';
-            var div = document.createElement('div');
-            div.innerHTML = data.trim();
-            document.getElementById('comments').appendChild(div);
+
+            document.getElementById('comments').innerHTML += data;
+            console.log(document);
+
         }
-        })
     })
+})
 }
 
-$(document).click(function(event) {
+
+$(function(){
+    $(document).click(function(event) {
     b_id = $(event.target);
     if (b_id.attr('class') == "sm_info mx-2") {
         $.ajax(b_id.data('url'), {
@@ -94,6 +97,9 @@ $(document).click(function(event) {
         })
     }
     })
+})
+
+
 
 $(document).ready(function(){
     var elements = document.getElementsByClassName('comment');
@@ -114,6 +120,7 @@ $(document).ready(function(){
     } else {
         document.getElementById('image').src = '/static/design/a_like.png';
     }
+
     addComment();
     processLike();
 });
