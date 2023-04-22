@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block import %}
-<script src="/static/js/post1.js" type="text/javascript"></script>
+<script src="/static/js/post.js" type="text/javascript"></script>
 <link rel="stylesheet" href="/static/styles/post.css" type="text/css">
 {% endblock %}
 
@@ -44,14 +44,12 @@
                                     </div>
                                 </div>
                             {% endfor %}
-                            <div id="comment"></div>
                         </div>
                 </div>
                 <div class="block my-2">
                     <a data-url="/post{{ post.id }}/" data-id="{{ post.id }}" class="like">
                         <img id="image" data-id="{{ post.id }}" data-url="/post{{ post.id }}/" src="" width="23">
                     </a>
-                    <a class="mx-2 my-2" href="/post{{ p.0.id }}"><img src="/static/design/comment.png" width="23"></a>
                     <p class="my-2 text"><b id="like">{{ like_amount }}</b> likes</p>
                     <p class="info">{{ post.created_at }}</p>
                 </div>
