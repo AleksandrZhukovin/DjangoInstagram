@@ -231,7 +231,7 @@ class UnfollowView(RedirectView):
 
 
 class PostView(CreateView):
-    template_name = 'post1.html'
+    template_name = 'post.html'
     form_class = CommentForm
 
     def post(self, request, *args, **kwargs):
@@ -290,7 +290,6 @@ class PostView(CreateView):
                 comments[n].append(0)
             comments[n].append(len(Like.objects.filter(comment=c)))
             n += 1
-        print(comments)
         context['comments'] = comments
         likes = []
         for i in Like.objects.filter(post=post):
