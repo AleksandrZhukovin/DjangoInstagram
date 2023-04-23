@@ -90,6 +90,22 @@ class Logout(LogoutView):
 class HomeView(TemplateView):
     template_name = 'home.html'
 
+    def post(self, request):
+        post_data = request.POST
+        print(post_data)
+        post = Post.objects.get(id=post_data['like_post'])
+        user = self.request.user
+        try:
+            like = Like.objects.get(user=user, post=post)
+            like.delete()
+            data = {'like_am': len(Like.objects.filter(post=post)), 'id': post.id, 'is_liked': 0}
+            return JsonResponse(data, safe=False)
+        except Like.DoesNotExist:
+            like = Like(post=post, user=user)
+            like.save()
+            data = {'like_am': len(Like.objects.filter(post=post)), 'id': post.id, 'is_liked': 1}
+            return JsonResponse(data, safe=False)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
@@ -100,10 +116,11 @@ class HomeView(TemplateView):
         wall = []
         for p in posts:
             if p.user in profile.following.all():
-                likes = []
-                for l in Like.objects.filter(post=p):
-                    likes.append(l.user)
-                wall.append([p, likes, len(likes)])
+                try:
+                    Like.objects.get(post=p, user=user)
+                    wall.append([p, 1, len(Like.objects.filter(post=p))])
+                except Like.DoesNotExist:
+                    wall.append([p, 0, len(Like.objects.filter(post=p))])
         context['posts'] = wall
         context['title'] = _('Home')
         context['user'] = user
@@ -239,13 +256,17 @@ class PostView(CreateView):
         post = Post.objects.get(id=self.kwargs['pk'])
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        cookie = request.COOKIES.get('like'+str(post.id))
-        if cookie == '1' and 'add_like' in post_data.keys():
-            like = Like.objects.get(user=user, post=post)
-            like.delete()
-        elif 'add_like' in post_data.keys():
-            like = Like(post=post, user=user)
-            like.save()
+        if 'add_like' in post_data.keys():
+            try:
+                like = Like.objects.get(user=user, post=post)
+                like.delete()
+                data = {'status': 'success', 'like_amount': len(Like.objects.filter(post=post)), 'is_liked': 0}
+                return JsonResponse(data, safe=False)
+            except Like.DoesNotExist:
+                like = Like(post=post, user=user)
+                like.save()
+                data = {'status': 'success', 'like_amount': len(Like.objects.filter(post=post)), 'is_liked': 1}
+                return JsonResponse(data, safe=False)
         if 'body' in post_data.keys():
             comment = Comment(body=post_data['body'], user=user, profile=profile, post=post)
             comment.save()
@@ -272,8 +293,6 @@ class PostView(CreateView):
                 like.save()
                 data = {'like_am': len(Like.objects.filter(comment=comment)), 'id': comment.id, 'is_liked': 1}
                 return JsonResponse(data, safe=False)
-        data = {'status': 'success', 'like_amount': len(Like.objects.filter(post=post))}
-        return JsonResponse(data, safe=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -281,7 +300,7 @@ class PostView(CreateView):
         post = Post.objects.get(id=self.kwargs['pk'])
         comments = []
         n = 0
-        for c in Comment.objects.filter(user=user, post=post):
+        for c in Comment.objects.filter(post=post):
             comments.append([c])
             try:
                 Like.objects.get(comment=c, user=user)
@@ -296,7 +315,11 @@ class PostView(CreateView):
             likes.append(i.user)
         context['likes'] = likes
         context['like_amount'] = len(Like.objects.filter(post=post))
-        context['post'] = post
+        try:
+            Like.objects.get(post=post, user=user)
+            context['post'] = [post, 1]
+        except Like.DoesNotExist:
+            context['post'] = [post, 0]
         context['title'] = _('Post')
         context['profile'] = Profile.objects.get(user=post.user)
         return context
