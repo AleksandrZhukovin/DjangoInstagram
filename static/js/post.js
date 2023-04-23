@@ -6,7 +6,6 @@ function processLike(){
         'async': true,
         'dataType': 'json',
         'data': {
-            'pk': like.data('id'),
             'add_like': 1,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
@@ -15,15 +14,13 @@ function processLike(){
             var n = document.getElementById('like');
             n.innerHTML = d;
             var i = $('#image');
-            var is_like = 0;
-            if ($.cookie('like'+like.data('id')) == 0) {
-                is_like = 1;
-                document.getElementById('image').src = '/static/design/a_like.png';
+            if (data['is_liked'] == 0) {
+               document.getElementById('image').src = '/static/design/like.png';
+               document.getElementsByClassName('is_liked').item(0).dataset.for = 0;
             } else {
-                is_like = 0;
-                document.getElementById('image').src = '/static/design/like.png';
+               document.getElementById('image').src = '/static/design/a_like.png';
+               document.getElementsByClassName('is_liked').item(0).dataset.for = 1;
             }
-            $.cookie('like'+like.data('id'), is_like, {'expires': 1000000});
         }
     })
     })
@@ -99,8 +96,6 @@ $(function(){
     })
 })
 
-
-
 $(document).ready(function(){
     var elements = document.getElementsByClassName('comment');
     for (var i=0; i < elements.length; i++) {
@@ -111,14 +106,12 @@ $(document).ready(function(){
         }
     }
 
-    var like = $('#image');
-    if (typeof $.cookie('like'+like.data('id')) == 'undefined') {
-        $.cookie('like'+like.data('id'), 0, {'expires': 1000000});
-    }
-    if ($.cookie('like'+like.data('id')) == 0) {
-        document.getElementById('image').src = '/static/design/like.png';
+    var elements = document.getElementsByClassName('block my-2 likes');
+
+    if (elements.item(0).getElementsByClassName('post_is_liked').item(0).getAttribute('data-for') == 0) {
+        elements.item(0).getElementsByClassName("like").item(0).src = "/static/design/like.png";
     } else {
-        document.getElementById('image').src = '/static/design/a_like.png';
+        elements.item(0).getElementsByClassName("like").item(0).src = "/static/design/a_like.png";
     }
 
     addComment();
