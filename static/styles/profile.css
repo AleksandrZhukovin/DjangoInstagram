@@ -35,7 +35,7 @@
   font-size: 15px;
   outline: none;
   text-decoration: none;
-  color: black;
+  color: white;
   border-radius: 5px;
   background: blue;
   padding: 7px 15px;
@@ -45,3 +45,19 @@
   background: rgb(0, 0, 190);
   font-size: 15px;
 }
+
+.profile_unfol:link, .profile_unfol:visited {
+  font-size: 15px;
+  outline: none;
+  text-decoration: none;
+  color: white;
+  border-radius: 5px;
+  padding: 7px 15px;
+  border: 3px solid white;
+}
+
+.profile_unfol:hover, .profile_unfol:active {
+  border: 3px solid #B3B3B3;
+  font-size: 15px;
+}
+

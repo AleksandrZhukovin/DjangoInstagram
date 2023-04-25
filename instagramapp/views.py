@@ -1,7 +1,6 @@
 from django.urls import reverse_lazy
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView, RedirectView
@@ -201,14 +200,37 @@ class SearchResultView(SearchView):
 class UserProfileView(TemplateView):
     template_name = 'user_profile.html'
 
+    def post(self, request, *args, **kwargs):
+        data_post = request.POST
+        print(data_post['is_followed'])
+        current_user = self.request.user
+        if data_post['is_followed'] == '0':
+            current_user_profile = Profile.objects.get(user=current_user)
+            current_user_profile.following.add(User.objects.get(id=data_post['follow']))
+            current_user_profile.save()
+            f_user = Profile.objects.get(user=User.objects.get(id=data_post['follow']))
+            f_user.followers.add(current_user)
+            f_user.save()
+            print(0)
+            return JsonResponse({'is_follow': 1, 'followers': len(f_user.followers.all())})
+        else:
+            current_user_profile = Profile.objects.get(user=current_user)
+            current_user_profile.following.remove(User.objects.get(id=data_post['follow']))
+            current_user_profile.save()
+            f_user = Profile.objects.get(user=User.objects.get(id=data_post['follow']))
+            f_user.followers.remove(current_user)
+            f_user.save()
+            print(1)
+            return JsonResponse({'is_follow': 0, 'followers': len(f_user.followers.all())})
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_user = self.request.user
         current_user_profile = Profile.objects.get(user=current_user)
         user = User.objects.get(id=self.kwargs['pk'])
-        context['follow'] = False
+        context['is_followed'] = 1
         if user not in current_user_profile.following.all():
-            context['follow'] = True
+            context['is_followed'] = 0
         context['title'] = user.username
         context['profile'] = Profile.objects.get(user=user)
         context['followers'] = len(Profile.objects.get(user=user).followers.all())
@@ -217,34 +239,6 @@ class UserProfileView(TemplateView):
         context['posts'] = Post.objects.filter(user=user)
         context['post_am'] = len(Post.objects.filter(user=user))
         return context
-
-
-class FollowView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        current_user = self.request.user
-        pk = self.kwargs['pk']
-        current_user_profile = Profile.objects.get(user=current_user)
-        current_user_profile.following.add(User.objects.get(id=pk))
-        current_user_profile.save()
-        f_user = Profile.objects.get(user=User.objects.get(id=pk))
-        f_user.followers.add(current_user)
-        f_user.save()
-        self.url = '/user_profile{0}/'.format(pk)
-        return super().get_redirect_url(*args, **kwargs)
-
-
-class UnfollowView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        current_user = self.request.user
-        pk = self.kwargs['pk']
-        current_user_profile = Profile.objects.get(user=current_user)
-        current_user_profile.following.remove(User.objects.get(id=pk))
-        current_user_profile.save()
-        f_user = Profile.objects.get(user=User.objects.get(id=pk))
-        f_user.followers.remove(current_user)
-        f_user.save()
-        self.url = '/user_profile{0}/'.format(pk)
-        return super().get_redirect_url(*args, **kwargs)
 
 
 class PostView(CreateView):
@@ -325,46 +319,27 @@ class PostView(CreateView):
         return context
 
 
-class AddCommentLikeView(UpdateView):
-    model = Comment
-
-    def dispatch(self, request, *args, **kwargs):
-        comment = Comment.objects.get(id=self.kwargs['comment_id'])
-        user = self.request.user
-        like = Like(comment=comment, user=user)
-        like.save()
-        return redirect('/post{0}/'.format(self.kwargs['pk']))
-
-
-class RemoveCommentLikeView(UpdateView):
-    model = Comment
-
-    def dispatch(self, request, *args, **kwargs):
-        comment = Comment.objects.get(id=self.kwargs['comment_id'])
-        user = self.request.user
-        like = Like.objects.get(comment=comment, user=user)
-        like.delete()
-        return redirect('/post{0}/'.format(self.kwargs['pk']))
-
-
 class ChatView(CreateView):
     model = Message
     template_name = 'chat.html'
     form_class = ChatForm
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        form.instance.chat = Chat.objects.get(id=self.kwargs['chat'])
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        post_data = request.POST
+        user = self.request.user
+        chat = Chat.objects.get(id=self.kwargs['chat'])
+        message = Message(user=user, chat=chat, body=post_data['message'])
+        message.save()
+        return JsonResponse({'message': message.body}, safe=False)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['messages'] = Message.objects.filter(chat=self.kwargs['chat'])
+        chat = Chat.objects.get(id=self.kwargs['chat'])
+        context['messages'] = Message.objects.filter(chat=chat)
         context['user'] = self.request.user
+        context['chat'] = chat
+        context['title'] = _('Chat')
         return context
-
-    def get_success_url(self):
-        return '/chat{0}'.format(self.kwargs['chat'])
 
 
 class StartChatView(RedirectView):
