@@ -161,38 +161,21 @@ class EditPostView(UpdateView):
 
 
 class SearchView(FormView):
-    model = User
     template_name = 'search.html'
     form_class = SearchForm
-    search = ''
 
-    def form_valid(self, form):
-        self.search = form.cleaned_data['search']
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        data_post = self.request.POST
+        users = User.objects.filter(username__contains=data_post['input'])
+        profiles = []
+        for u in users:
+            profiles.append(Profile.objects.get(user=u))
+        result = render_to_string('search_results_template.html', {'results': profiles})
+        return JsonResponse(result, safe=False)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = _('Search')
-        context['profile'] = Profile.objects.get(user=self.request.user)
-        return context
-
-    def get_success_url(self):
-        return '/search/{0}/'.format(self.search)
-
-
-class SearchResultView(SearchView):
-    def get_initial(self):
-        initial = super().get_initial()
-        initial['search'] = self.kwargs['search']
-        return initial
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        users = User.objects.filter(username__contains=self.kwargs['search'])
-        profiles = []
-        for u in users:
-            profiles.append(Profile.objects.get(user=u))
-        context['results'] = profiles
         context['profile'] = Profile.objects.get(user=self.request.user)
         return context
 
