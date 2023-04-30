@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}<title>{{ title }}</title>{% endblock %}
+{% block title %}<title xmlns="http://www.w3.org/1999/html">{{ title }}</title>{% endblock %}
 {% block import %}
     <link rel="stylesheet" href="/static/styles/profile.css" type="text/css">
     <script src="/static/js/profile.js"></script>
@@ -7,44 +7,47 @@
 
 {% block content %}
 <body class="body_back">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2 col-lg-2 vl">
-                <a href="/"><img class="my-5 mx-3" src="/static/design/logo.png" width="150"></a>
-                <a class='nav' href="/profile">Profile</a><br>
-                <a class='nav' href="/add_post">Add Post</a><br>
-                <a class='nav' href="/logout">Logout</a><br>
-                <a class='nav' href="/search">Search</a><br>
-                <a class='nav' href="/chats">Chats</a><br>
-            </div>
-            <div class='col-md-10 col-lg-10 my-3'>
-                <div style="display: flex;" class="block">
-                    <div class="my-3" style="padding-left: 25%">
-                        <img  src="{{ profile.image.url }}" width="200">
-                    </div>
-                    <div style="padding-left: 5%;" class="my-5">
-                        {% csrf_token %}
-                        <input type="hidden" id="is_follow" data-for="{{ is_followed }}">
-                        <a id="follow" class="profile_fol" data-id="{{ profile.user.id }}" data-url="/user_profile{{ profile.user.id }}/"><b id="action">Follow</b></a>
-                        <a class="profile_fol mx-2" href="/start_chat{{ profile.user.id }}"><b>Message</b></a>
-                        <p class="text my-3"><b>{{ post_am }}</b> posts <b id='followers' style="padding-left: 15px;">{{ followers }}</b> followers <b style="padding-left: 15px;">{{ following }}</b> following</p>
-                        <p class="text my-3"><b>{{ user.first_name}} {{ user.last_name }}</b><br>{{ profile.status }}</p>
-                    </div>
-                </div>
-                <div>
-                    <p class="my-3 text-center text">Posts</p>
-                </div>
-                <div style="display: flex; padding-left: 18%; width: 910px;">
-                    {% if posts %}
-                        {% for p in posts %}
-                            <div class="fill mx-1">
-                                <a href="/post{{ p.id }}"><img src="{{ p.image.url }}"></a>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+    <div class="cover">
+        <div class="side_bar">
+            <div class="content">
+                <a href="/"><img class="my-5 mx-3 logo" src="/static/design/logo.png"></a>
+                <a href="/"><img class="my-5 logo_sm" src="/static/design/logo1.png"></a>
+                <a class='nav' href="/profile">
+                    <img class="profile-image nav_icon" src="{{ profile.image.url }}">  <text class="nav_link">Profile</text>
+                </a><br>
+                <a class='nav' href="/add_post"><img class="nav_icon" src="/static/design/add.png">  <text class="nav_link">Add Post</text></a><br>
+                <a class='nav' href="/logout"><img class="nav_icon" src="/static/design/logout.png">  <text class="nav_link">Logout</text></a><br>
+                <a class='nav' href="/search"><img class="nav_icon" src="/static/design/search.png">  <text class="nav_link">Search</text></a><br>
+                <a class='nav' href="/chats"><img class="nav_icon" src="/static/design/message.png">  <text class="nav_link">Chats</text></a><br>
             </div>
         </div>
+        <main class="base">
+            <div class="block profile_info">
+                 <div class="my-3 profile_image">
+                    <img src="{{ profile.image.url }}" class="profile_ava">
+                 </div>
+                 <div class="profile_data">
+                    {% csrf_token %}
+                    <input type="hidden" id="is_follow" data-for="{{ is_followed }}">
+                    <button id="follow" class="profile_fol" data-id="{{ profile.user.id }}" data-url="/user_profile{{ profile.user.id }}/"><b id="action">Follow</b></button>
+                    <a class="profile_fol mx-2" href="/start_chat{{ profile.user.id }}"><b>Message</b></a>
+                    <p class="text my-3"><b>{{ post_am }}</b> posts <b id='followers' class="sm_pad_l">{{ followers }}</b> followers <b class="sm_pad_l">{{ following }}</b> following</p>
+                    <p class="text my-3"><b>{{ user.first_name}} {{ user.last_name }}</b><br>{{ profile.status }}</p>
+                </div>
+            </div>
+            <div>
+                <p class="my-3 text-center text">Posts</p>
+            </div>
+           <div class="posts">
+                {% if posts %}
+                    {% for p in posts %}
+                        <div class="fill mx-1">
+                            <a href="/post{{ p.id }}"><img src="{{ p.image.url }}"></a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </main>
     </div>
 </body>
 {% endblock %}
