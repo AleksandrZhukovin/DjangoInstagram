@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}<title>Home</title>{% endblock %}
+{% block title %}<title>{{ title }}</title>{% endblock %}
 {% block import %}
     <link rel="stylesheet" href="/static/styles/home.css" type="text/css">
     <script src="/static/js/home.js"></script>
@@ -8,55 +8,53 @@
 {% block content %}
 <body class="body_back">
     <div class="cover">
-            <div class="side_bar">
-                <div class="content">
-                    <a href="/"><img class="my-5 mx-3 logo" src="/static/design/logo.png"></a>
-                    <a href="/"><img class="my-5 logo_sm" src="/static/design/logo1.png"></a>
-                    <a class='nav' href="/profile">
-                        <img class="profile-image nav_icon" src="{{ profile.image.url }}">  <text class="nav_link">Profile</text>
-                    </a><br>
-                    <a class='nav' href="/add_post"><img class="nav_icon" src="/static/design/add.png">  <text class="nav_link">Add Post</text></a><br>
-                    <a class='nav' href="/logout"><img class="nav_icon" src="/static/design/logout.png">  <text class="nav_link">Logout</text></a><br>
-                    <a class='nav' href="/search"><img class="nav_icon" src="/static/design/search.png">  <text class="nav_link">Search</text></a><br>
-                    <a class='nav' href="/chats"><img class="nav_icon" src="/static/design/message.png">  <text class="nav_link">Chats</text></a><br>
-                </div>
-            </div>
-            <div class="nav_bar">
-                <p>hhh</p>
-            </div>
-            <div class="main my-4">
-                {% csrf_token %}
-                {% if posts %}
-                    {% for p in posts %}
-                        <div class="post" id="{{ p.0.id }}">
-                            <a class="profile_link" href="/user_profile{{ p.0.user.id }}"><img class="profile-image pr-3" src="{{ p.0.profile.image.url }}" width="35" height="35"> <b>{{ p.0.user.username }}</b></a><br>
-                            <a href="/post{{ p.0.id }}"><img class="post_image my-2" src="{{ p.0.image.url }}"></a><br>
-                            <div class="likes" data-id="{{ p.0.id }}">
-                                <input type="hidden" class="is_liked" data-for="{{ p.1 }}">
-                                <a data-id="{{ p.0.id }}" data-url="/">
-                                    <img class="like_btn" data-id="{{ p.0.id }}" data-url="/" src="/static/design/like.png" width="23">
-                                </a>
-                                <a class="mx-2 my-2" href="/post{{ p.0.id }}">
-                                    <img src="/static/design/comment.png" width="23">
-                                </a>
-                                <p class="my-2 text"><b class="like_amount">{{ p.2 }}</b> likes</p>
-                            </div>
-                            <p class="text"><a class="profile_link" href="/user_profile{{ p.0.user.id }}"><b>{{ p.0.user.username }}</b></a> {{ p.0.description }}</p>
-                            <a style="color: #bdbdbd; text-decoration: none; font-size: 14px;" href="/post{{ p.0.id }}">Add Comment</a>
-                            <hr>
-                        </div>
-
-                    {% endfor %}
-                {% endif %}
-            </div>
-
-            <div class="recommend my-4">
-                        <a href="/profile"><img class="profile-image pr-3" src="{{ profile.image.url }}" width="50" height="50"></a>
-                        <a class="profile_link mx-2" href="/profile"><b>{{ user.username }}</b></a><br>
-                <h6 class="my-3 info">Recommendations</h6>
-                <hr>
+        <div class="side_bar">
+            <div class="content">
+                <a href="/"><img class="my-5 mx-3 logo" src="/static/design/logo.png"></a>
+                <a href="/"><img class="my-5 logo_sm" src="/static/design/logo1.png"></a>
+                <a class='nav' href="/profile">
+                    <img class="profile-image nav_icon" src="{{ profile.image.url }}">  <text class="nav_link">Profile</text>
+                </a><br>
+                <a class='nav' href="/add_post"><img class="nav_icon" src="/static/design/add.png">  <text class="nav_link">Add Post</text></a><br>
+                <a class='nav' href="/logout"><img class="nav_icon" src="/static/design/logout.png">  <text class="nav_link">Logout</text></a><br>
+                <a class='nav' href="/search"><img class="nav_icon" src="/static/design/search.png">  <text class="nav_link">Search</text></a><br>
+                <a class='nav' href="/chats"><img class="nav_icon" src="/static/design/message.png">  <text class="nav_link">Chats</text></a><br>
             </div>
         </div>
+        <div class="nav_bar">
+            <p>hhh</p>
+        </div>
+        <div class="main my-4">
+            {% csrf_token %}
+            {% if posts %}
+                {% for p in posts %}
+                    <div class="post" id="{{ p.0.id }}">
+                        <a class="profile_link" href="/user_profile{{ p.0.user.id }}"><img class="profile-image pr-3" src="{{ p.0.profile.image.url }}" width="35" height="35"> <b>{{ p.0.user.username }}</b></a><br>
+                        <a href="/post{{ p.0.id }}"><img class="post_image my-2" src="{{ p.0.image.url }}"></a><br>
+                        <div class="likes" data-id="{{ p.0.id }}">
+                            <input type="hidden" class="is_liked" data-for="{{ p.1 }}">
+                            <a data-id="{{ p.0.id }}" data-url="/">
+                                <img class="like_btn" data-id="{{ p.0.id }}" data-url="/" src="/static/design/like.png" width="23">
+                            </a>
+                            <a class="mx-2 my-2" href="/post{{ p.0.id }}">
+                                <img src="/static/design/comment.png" width="23">
+                            </a>
+                            <p class="my-2 text"><b class="like_amount">{{ p.2 }}</b> likes</p>
+                        </div>
+                        <p class="text"><a class="profile_link" href="/user_profile{{ p.0.user.id }}"><b>{{ p.0.user.username }}</b></a> {{ p.0.description }}</p>
+                        <a class="info" href="/post{{ p.0.id }}">Add Comment</a>
+                        <hr>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="recommend my-4">
+                    <a href="/profile"><img class="profile-image pr-3" src="{{ profile.image.url }}" width="50" height="50"></a>
+                    <a class="profile_link mx-2" href="/profile"><b>{{ user.username }}</b></a><br>
+            <h6 class="my-3 info">Recommendations</h6>
+            <hr>
+        </div>
+    </div>
 
 </body>
 {% endblock %}
