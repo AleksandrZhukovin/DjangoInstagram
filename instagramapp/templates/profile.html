@@ -8,33 +8,37 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 </head>
 <body class="body_back">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2 col-lg-2 vl">
-                <a href="/"><img class="my-5 mx-3" src="/static/design/logo.png" width="150"></a>
-                <a class='nav' href="/profile">Profile</a><br>
-                <a class='nav' href="/add_post">Add Post</a><br>
-                <a class='nav' href="/logout">Logout</a><br>
-                <a class='nav' href="/search">Search</a><br>
-                <a class='nav' href="/chats">Chats</a><br>
+    <div class="cover">
+        <div class="side_bar">
+            <div class="content">
+                <a href="/"><img class="my-5 mx-3 logo" src="/static/design/logo.png"></a>
+                <a href="/"><img class="my-5 logo_sm" src="/static/design/logo1.png"></a>
+                <a class='nav' href="/profile">
+                    <img class="profile-image nav_icon" src="{{ profile.image.url }}">  <text class="nav_link">Profile</text>
+                </a><br>
+                <a class='nav' href="/add_post"><img class="nav_icon" src="/static/design/add.png">  <text class="nav_link">Add Post</text></a><br>
+                <a class='nav' href="/logout"><img class="nav_icon" src="/static/design/logout.png">  <text class="nav_link">Logout</text></a><br>
+                <a class='nav' href="/search"><img class="nav_icon" src="/static/design/search.png">  <text class="nav_link">Search</text></a><br>
+                <a class='nav' href="/chats"><img class="nav_icon" src="/static/design/message.png">  <text class="nav_link">Chats</text></a><br>
             </div>
-            <div class='my-3' style="position: absolute; left: 400px; width: 800px; float: right;">
-                <div style="display: flex;" class="block">
-                    <div class="my-3" style="padding-left: 25%">
-                        <img  src="{{ profile.image.url }}" width="200">
+        </div>
+        <main class="base">
+            <div class="block profile_info">
+                    <div class="my-3 profile_image">
+                        <img class="profile_ava" src="{{ profile.image.url }}">
                     </div>
-                    <div style="padding-left: 5%;">
-                        <p class="my-3" style="color: white; font-size: 24px;"><b>{{ user.username }}</b>
-                            <a class="profile_set mx-5" href="/edit_profile{{ profile.id }}"><b>Edit Profile</b></a>
-                        </p>
-                        <p class="text my-3"><b>{{ post_am }}</b> posts <b style="padding-left: 15px;">{{ followers }}</b> followers <b style="padding-left: 15px;">{{ following }}</b> following</p>
-                        <p class="text my-3"><b>{{ user.first_name}} {{ user.last_name }}</b><br>{{ profile.status }}</p>
-                    </div>
+                <div class="profile_data">
+                    <p class="my-3 username"><b class="sm_pad_r">{{ user.username }}</b>
+                        <a class="profile_set" href="/edit_profile{{ profile.id }}"><b>Edit Profile</b></a>
+                    </p>
+                    <p class="text my-3"><b>{{ post_am }}</b> posts <b class="sm_pad_l">{{ followers }}</b> followers <b class="sm_pad_l">{{ following }}</b> following</p>
+                    <p class="text my-3"><b>{{ user.first_name}} {{ user.last_name }}</b><br>{{ profile.status }}</p>
                 </div>
-                <div>
-                    <p class="my-3 text-center text">Posts</p>
-                </div>
-                <div style="display: flex; padding-left: 18%; width: 910px;">
+            </div>
+            <div>
+                <p class="my-3 text-center text">Posts</p>
+            </div>
+                <div class="posts">
                     {% if posts %}
                         {% for p in posts %}
                             <div class="fill mx-1">
@@ -43,8 +47,7 @@
                         {% endfor %}
                     {% endif %}
                 </div>
-            </div>
-        </div>
+        </main>
     </div>
 </body>
 </html>
