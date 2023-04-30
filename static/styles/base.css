@@ -55,6 +55,7 @@ hr {
 
 .info {
   color: #BDBDBD;
+  text-decoration: none;
 }
 
 .cover {
@@ -112,7 +113,7 @@ hr {
 
     .main {
         position: absolute;
-        width: 60%;
+        width: 75%;
         left: 20%;
     }
 
