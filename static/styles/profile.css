@@ -1,14 +1,14 @@
 .fill {
     display: flex;
-    width: 300px;
-    height: 300px;
+    width: 32%;
+
     overflow: hidden;
     justify-content: center;
     align-items: center;
 }
 
 .fill img {
-    height: 300px;
+    width: 100%;
     object-fit: cover;
 }
 
@@ -31,33 +31,101 @@
   font-size: 15px;
 }
 
-.profile_fol:link, .profile_fol:visited {
+.profile_fol {
   font-size: 15px;
-  outline: none;
-  text-decoration: none;
   color: white;
+  text-decoration: none;
   border-radius: 5px;
-  background: blue;
+  background-color: blue;
   padding: 7px 15px;
+  border: 0px;
 }
 
-.profile_fol:hover, .profile_fol:active {
-  background: rgb(0, 0, 190);
-  font-size: 15px;
-}
 
-.profile_unfol:link, .profile_unfol:visited {
+.profile_unfol {
   font-size: 15px;
-  outline: none;
-  text-decoration: none;
   color: white;
+  text-decoration: none;
   border-radius: 5px;
   padding: 7px 15px;
   border: 3px solid white;
+  background-color: black;
+  border: 1px solid white;
 }
 
-.profile_unfol:hover, .profile_unfol:active {
-  border: 3px solid #B3B3B3;
-  font-size: 15px;
+.posts {
+    display: flex;
+    width: 100%;
 }
+
+.profile_info {
+    width: 100%;
+    display: flex;
+    position: relative;
+}
+
+.profile_image {
+    width: 50%;
+    position: relative;
+}
+
+.profile_data {
+    width: 50%;
+    position: relative;
+}
+
+.data {
+    position: absolute;
+    right: 5%;
+}
+
+.profile_ava {
+    position: absolute;
+    height: 100%;
+    right: 5%;
+}
+
+.username {
+    color: white;
+    font-size: 24px;
+}
+
+.sm_pad_r {
+    padding-right: 2%;
+}
+
+.sm_pad_l {
+    padding-left: 2%;
+}
+
+@media screen and (max-width: 3000px) {
+    .base {
+        top: 15px;
+        position: absolute;
+        width: 75%;
+        left: 20%;
+    }
+
+}
+
+@media screen and (max-width: 1000px) {
+
+    .base {
+        top: 15px;
+        position: absolute;
+        width: 80%;
+        left: 15%;
+    }
+
+}
+
+@media screen and (max-width: 500px) {
+    .base {
+        top: 15px;
+        position: absolute;
+        width: 100%
+    }
+}
+
+
 
