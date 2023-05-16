@@ -1,12 +1,8 @@
-from django.contrib.auth.models import User
 from django.db import models
 from .post import Post
-from .profile import Profile
+from .abstract import Abstract
 
 
-class Comment(models.Model):
+class Comment(Abstract):
     body = models.CharField(max_length=1000)
-    created_at = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
