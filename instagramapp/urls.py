@@ -15,7 +15,6 @@ urlpatterns = [
     path('post<int:pk>/', views.PostView.as_view(), name='post_view'),
     path('edit_profile<int:pk>/', views.EditProfileView.as_view(), name='edit_profile'),
     path('edit_profile_personal<int:pk>/', views.EditProfilePersonalView.as_view(), name='edit_profile_personal'),
-    path('chat<int:chat>/', views.ChatView.as_view(), name='chat'),
     path('start_chat<int:user_id>/', views.StartChatView.as_view(), name='start_chat'),
     path('chats/', views.ChatsView.as_view(), name='chats')
 ]

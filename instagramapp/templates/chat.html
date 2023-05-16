@@ -1,15 +1,5 @@
-{% extends 'base.html' %}
-{% block title %}<title>{{ title }}</title>{% endblock %}
-{% block import %}
-    <link rel="stylesheet" href="/static/styles/chat.css" type="text/css">
-    <script src="/static/js/chat.js"></script>
-{% endblock %}
 
-{% block content %}
-<body class="body_back">
-    <div class="container">
-        <div class="row main">
-            <div class="col-lg-8 col-md-8">
+            <div>
                 <div class="my-3" style="overflow-y: scroll; height: 600px;">
                     {% if messages %}
                     <div id="messages">
@@ -28,10 +18,7 @@
                     {% for f in form %}
                         {{ f }}
                     {% endfor %}
-                    <button id="input" class="btn_send" data-url="/chat{{ chat.id }}/" data-id="{{ chat.id }}">Send</button>
+                    <button id="input" class="btn_send" data-url="/chats/" data-id="{{ chat.id }}">Send</button>
                 </div>
             </div>
-        </div>
-    </div>
-</body>
-{% endblock %}
+

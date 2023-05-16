@@ -91,7 +91,6 @@ class HomeView(TemplateView):
 
     def post(self, request):
         post_data = request.POST
-        print(post_data)
         post = Post.objects.get(id=post_data['like_post'])
         user = self.request.user
         try:
@@ -183,9 +182,8 @@ class SearchView(FormView):
 class UserProfileView(TemplateView):
     template_name = 'user_profile.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         data_post = request.POST
-        print(data_post['is_followed'])
         current_user = self.request.user
         if data_post['is_followed'] == '0':
             current_user_profile = Profile.objects.get(user=current_user)
@@ -194,7 +192,6 @@ class UserProfileView(TemplateView):
             f_user = Profile.objects.get(user=User.objects.get(id=data_post['follow']))
             f_user.followers.add(current_user)
             f_user.save()
-            print(0)
             return JsonResponse({'is_follow': 1, 'followers': len(f_user.followers.all())})
         else:
             current_user_profile = Profile.objects.get(user=current_user)
@@ -203,7 +200,6 @@ class UserProfileView(TemplateView):
             f_user = Profile.objects.get(user=User.objects.get(id=data_post['follow']))
             f_user.followers.remove(current_user)
             f_user.save()
-            print(1)
             return JsonResponse({'is_follow': 0, 'followers': len(f_user.followers.all())})
 
     def get_context_data(self, **kwargs):
@@ -302,29 +298,6 @@ class PostView(CreateView):
         return context
 
 
-class ChatView(CreateView):
-    model = Message
-    template_name = 'chat.html'
-    form_class = ChatForm
-
-    def post(self, request, *args, **kwargs):
-        post_data = request.POST
-        user = self.request.user
-        chat = Chat.objects.get(id=self.kwargs['chat'])
-        message = Message(user=user, chat=chat, body=post_data['message'])
-        message.save()
-        return JsonResponse({'message': message.body}, safe=False)
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        chat = Chat.objects.get(id=self.kwargs['chat'])
-        context['messages'] = Message.objects.filter(chat=chat)
-        context['user'] = self.request.user
-        context['chat'] = chat
-        context['title'] = _('Chat')
-        return context
-
-
 class StartChatView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         user = self.request.user
@@ -343,6 +316,19 @@ class StartChatView(RedirectView):
 
 class ChatsView(TemplateView):
     template_name = 'chats.html'
+
+    def post(self, request):
+        data_post = request.POST
+        chat = Chat.objects.get(id=data_post['chat'])
+        if 'message' in data_post.keys():
+            user = self.request.user
+            message = Message(user=user, chat=chat, body=data_post['message'])
+            message.save()
+            return JsonResponse({'message': message.body}, safe=False)
+        messages = Message.objects.filter(chat=chat)
+        form = ChatForm()
+        result = render_to_string('chat.html', {'messages': messages, 'form': form, 'chat': chat})
+        return JsonResponse(result, safe=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
