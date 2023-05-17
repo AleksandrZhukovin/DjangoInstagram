@@ -1,0 +1,173 @@
+.body_back {
+  background-color: black;
+}
+
+.nav:link, .nav:visited {
+  font-size: 15px;
+  outline: none;
+  border-radius: 25px;
+  text-decoration: none;
+  display: inline-block;
+  padding: 10px 30px;
+  text-align: left;
+  line-height: 3;
+  color: white;
+}
+
+
+.nav:hover, .nav:active {
+  font-size: 15px;
+  font-weight: bold;
+  background: #101010;
+  color: white;
+  transform: scale(1.1);
+}
+
+.text {
+  color: white;
+}
+
+hr {
+  height: 3px;
+  background-color: #505050;
+}
+
+.block {
+  border-bottom: 1px solid #404040;
+}
+
+.profile-image {
+  border-radius: 50%;
+}
+
+.profile_link:link, .profile_link:visited {
+  font-size: 15px;
+  outline: none;
+  text-decoration: none;
+  color: white;
+  border-down: 1px solid #404040;
+}
+
+.profile_link:hover, .profile_link:active {
+  color: #BDBDBD;
+  font-size: 15px;
+}
+
+.info {
+  color: #BDBDBD;
+  text-decoration: none;
+}
+
+.cover {
+    position: relative;
+    width: 100%;
+}
+
+@media screen and (max-width: 3000px) {
+    .side_bar {
+      height: 100vh;
+      border-right: 1px solid #404040;
+      position: fixed;
+      width: 200px;
+    }
+
+    .main {
+        position: absolute;
+        width: 60%;
+        left: 20%;
+    }
+
+    .recommend {
+        position: absolute;
+        width: 20%;
+        right: 0%;
+    }
+
+    .nav_bar {
+        display: none;
+    }
+
+    .nav_icon {
+        height: 20px;
+    }
+
+    .logo {
+        width: 180px;
+    }
+
+    .logo_sm {
+        display: none;
+    }
+
+}
+
+@media screen and (max-width: 1000px) {
+
+    .side_bar {
+      height: 100vh;
+      border-right: 1px solid #404040;
+      position: fixed;
+      width: 100px;
+      align-items: center;
+    }
+
+    .main {
+        position: absolute;
+        width: 75%;
+        left: 20%;
+    }
+
+    .recommend {
+        position: absolute;
+        width: 20%;
+        right: 0%;
+    }
+
+    .nav_link {
+        display: none;
+    }
+
+    .nav_icon {
+        height: 25px;
+    }
+
+    .nav_bar {
+        display: none;
+    }
+
+    .logo {
+        display: none;
+    }
+
+    .logo_sm {
+        display: inline;
+        position: relative;
+        left: 30px;
+        height: 25px;
+    }
+
+}
+
+@media screen and (max-width: 500px) {
+    .side_bar {
+      display: none;
+    }
+
+    .main {
+        position: absolute;
+        width: 100%;
+    }
+
+    .recommend {
+        display: none;
+    }
+
+    .nav_bar {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: white;
+        height: 5%;
+    }
+}
+
