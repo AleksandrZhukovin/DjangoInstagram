@@ -2,8 +2,8 @@
 *.log
 *.pot
 *.pyc
-instagram/__pycache__/
-instagramapp/__pycache__/
+__pycache__/
+
 media
 
 # PyCharm
