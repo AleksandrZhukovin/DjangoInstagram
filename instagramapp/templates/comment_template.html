@@ -3,11 +3,11 @@
     <div style="display: flex;">
         <input type="hidden" class="is_liked" data-for="0">
         <div>
-            <a href="/user_profile{{ user.id }}"><img class="profile-image my-2" src="{{ profile.image.url }}" width="35" height="35"></a>
+            <a href="/user_profile/{{ user.id }}"><img class="profile-image my-2" src="{{ profile.image.url }}" width="35" height="35"></a>
         </div>
         <div style="width: 500px;">
-            <p class="text"><a class="profile_link" href="/user_profile{{ c.0.user.id }}"><b class="mx-2">{{ user.username }}</b></a>
-                {{ comment.body }}<br><a class="sm_info mx-2" id="delete_comment{{ comment.id }}" data-url="/post{{ post.id }}/" data-id="{{ comment.id }}">Delete</a>
+            <p class="text"><a class="profile_link" href="/user_profile/{{ c.0.user.id }}"><b class="mx-2">{{ user.username }}</b></a>
+                {{ comment.body }}<br><a class="sm_info mx-2" id="delete_comment{{ comment.id }}" data-url="/post/{{ post.id }}/" data-id="{{ comment.id }}">Delete</a>
             </p>
         </div>
         <div class="comment_like" data-id="{{ comment.id }}" style="display: flex;">
@@ -15,8 +15,8 @@
                 <p class="sm_info mx-2">{{ like_am }}</p>
             </div>
             <div>
-                <a class="comment_like_btn" id="like_comment{{ comment.id }}" data-id="{{ comment.id }}" data-url="/post{{ post.id }}/">
-                    <img class="comment_like mb-2" data-id="{{ comment.id }}" data-url="/post{{ post.id }}/" src="{% static 'design/like.png' %}" width="12">
+                <a class="comment_like_btn" id="like_comment{{ comment.id }}" data-id="{{ comment.id }}" data-url="/post/{{ post.id }}/">
+                    <img class="comment_like mb-2" data-id="{{ comment.id }}" data-url="/post/{{ post.id }}/" src="{% static 'design/like.png' %}" width="12">
                 </a>
             </div>
         </div>

@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}<title xmlns="http://www.w3.org/1999/html">{{ title }}</title>{% endblock %}
 {% block import %}
-    {% load static %}
     <link rel="stylesheet" href="{% static 'styles/profile.css' %}" type="text/css">
     <script src="{% static 'js/profile.js' %}"></script>
 {% endblock %}
@@ -30,7 +29,7 @@
                  <div class="profile_data">
                     {% csrf_token %}
                     <input type="hidden" id="is_follow" data-for="{{ is_followed }}">
-                    <button id="follow" class="profile_fol" data-id="{{ user.id }}" data-url="/user_profile{{ user.id }}/"><b id="action">Follow</b></button>
+                    <button id="follow" class="profile_fol" data-id="{{ user.id }}" data-url="/user_profile/{{ user.id }}/"><b id="action">Follow</b></button>
                     <a class="profile_fol mx-2" href="/start_chat/{{ user.id }}"><b>Message</b></a>
                     <p class="text my-3"><b>{{ post_am }}</b> posts <b id='followers' class="sm_pad_l">{{ followers }}</b> followers <b class="sm_pad_l">{{ following }}</b> following</p>
                     <p class="text my-3"><b>{{ user.first_name}} {{ user.last_name }}</b><br>{{ user.status }}</p>
@@ -43,7 +42,7 @@
                 {% if posts %}
                     {% for p in posts %}
                         <div class="fill mx-1">
-                            <a href="/post{{ p.id }}"><img src="{{ p.image.url }}"></a>
+                            <a href="/post/{{ p.id }}"><img src="{{ p.image.url }}"></a>
                         </div>
                     {% endfor %}
                 {% endif %}

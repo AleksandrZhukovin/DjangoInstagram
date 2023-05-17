@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block import %}
-    {% load static %}
     <link rel="stylesheet" href="{% static 'styles/home.css' %}" type="text/css">
     <script src="{% static 'js/home.js' %}"></script>
 {% endblock %}
@@ -30,20 +29,20 @@
             {% if posts %}
                 {% for p in posts %}
                     <div class="post" id="{{ p.0.id }}">
-                        <a class="profile_link" href="/user_profile{{ p.0.user.id }}"><img class="profile-image pr-3" src="{{ p.0.profile.image.url }}" width="35" height="35"> <b>{{ p.0.user.username }}</b></a><br>
-                        <a href="/post{{ p.0.id }}"><img class="post_image my-2" src="{{ p.0.image.url }}"></a><br>
+                        <a class="profile_link" href="/user_profile/{{ p.0.user.id }}"><img class="profile-image pr-3" src="{{ p.0.profile.image.url }}" width="35" height="35"> <b>{{ p.0.user.username }}</b></a><br>
+                        <a href="/post/{{ p.0.id }}"><img class="post_image my-2" src="{{ p.0.image.url }}"></a><br>
                         <div class="likes" data-id="{{ p.0.id }}">
                             <input type="hidden" class="is_liked" data-for="{{ p.1 }}">
                             <a data-id="{{ p.0.id }}" data-url="/">
                                 <img class="like_btn" data-id="{{ p.0.id }}" data-url="/" src="{% static 'design/like.png' %}" width="23">
                             </a>
-                            <a class="mx-2 my-2" href="/post{{ p.0.id }}">
+                            <a class="mx-2 my-2" href="/post/{{ p.0.id }}">
                                 <img src="{% static 'design/comment.png' %}" width="23">
                             </a>
                             <p class="my-2 text"><b class="like_amount">{{ p.2 }}</b> likes</p>
                         </div>
-                        <p class="text"><a class="profile_link" href="/user_profile{{ p.0.user.id }}"><b>{{ p.0.user.username }}</b></a> {{ p.0.description }}</p>
-                        <a class="info" href="/post{{ p.0.id }}">Add Comment</a>
+                        <p class="text"><a class="profile_link" href="/user_profile/{{ p.0.user.id }}"><b>{{ p.0.user.username }}</b></a> {{ p.0.description }}</p>
+                        <a class="info" href="/post/{{ p.0.id }}">Add Comment</a>
                         <hr>
                     </div>
                 {% endfor %}
