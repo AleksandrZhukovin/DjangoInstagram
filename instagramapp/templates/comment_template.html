@@ -1,3 +1,4 @@
+{% load static %}
 <div id="{{ comment.id }}" class="comment">
     <div style="display: flex;">
         <input type="hidden" class="is_liked" data-for="0">
@@ -15,7 +16,7 @@
             </div>
             <div>
                 <a class="comment_like_btn" id="like_comment{{ comment.id }}" data-id="{{ comment.id }}" data-url="/post{{ post.id }}/">
-                    <img class="comment_like mb-2" data-id="{{ comment.id }}" data-url="/post{{ post.id }}/" src="/static/design/like.png" width="12">
+                    <img class="comment_like mb-2" data-id="{{ comment.id }}" data-url="/post{{ post.id }}/" src="{% static 'design/like.png' %}" width="12">
                 </a>
             </div>
         </div>

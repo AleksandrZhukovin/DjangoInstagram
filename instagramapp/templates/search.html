@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block import %}
-    <link rel="stylesheet" href="/static/styles/search.css" type="text/css">
-    <script src="/static/js/search.js"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/search.css' %}" type="text/css">
+    <script src="{% static 'js/search.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -10,15 +11,15 @@
     <div class="cover">
         <div class="side_bar">
             <div class="content">
-                <a href="/"><img class="my-5 mx-3 logo" src="/static/design/logo.png"></a>
-                <a href="/"><img class="my-5 logo_sm" src="/static/design/logo1.png"></a>
+                <a href="/"><img class="my-5 mx-3 logo" src="{% static 'design/logo.png' %}"></a>
+                <a href="/"><img class="my-5 logo_sm" src="{% static 'design/logo1.png' %}"></a>
                 <a class='nav' href="/profile">
                     <img class="profile-image nav_icon" src="{{ profile.image.url }}">  <text class="nav_link">Profile</text>
                 </a><br>
-                <a class='nav' href="/add_post"><img class="nav_icon" src="/static/design/add.png">  <text class="nav_link">Add Post</text></a><br>
-                <a class='nav' href="/logout"><img class="nav_icon" src="/static/design/logout.png">  <text class="nav_link">Logout</text></a><br>
-                <a class='nav' href="/search"><img class="nav_icon" src="/static/design/search.png">  <text class="nav_link">Search</text></a><br>
-                <a class='nav' href="/chats"><img class="nav_icon" src="/static/design/message.png">  <text class="nav_link">Chats</text></a><br>
+                <a class='nav' href="/add_post"><img class="nav_icon" src="{% static 'design/add.png' %}">  <text class="nav_link">Add Post</text></a><br>
+                <a class='nav' href="/logout"><img class="nav_icon" src="{% static 'design/logout.png' %}">  <text class="nav_link">Logout</text></a><br>
+                <a class='nav' href="/search"><img class="nav_icon" src="{% static 'design/search.png' %}">  <text class="nav_link">Search</text></a><br>
+                <a class='nav' href="/chats"><img class="nav_icon" src="{% static 'design/message.png' %}">  <text class="nav_link">Chats</text></a><br>
             </div>
         </div>
         <div class="main my-4">

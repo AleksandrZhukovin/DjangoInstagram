@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block import %}
-    <link rel="stylesheet" href="/static/styles/home.css" type="text/css">
-    <script src="/static/js/home.js"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}" type="text/css">
+    <script src="{% static 'js/home.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -10,15 +11,15 @@
     <div class="cover">
         <div class="side_bar">
             <div class="content">
-                <a href="/"><img class="my-5 mx-3 logo" src="/static/design/logo.png"></a>
-                <a href="/"><img class="my-5 logo_sm" src="/static/design/logo1.png"></a>
+                <a href="/"><img class="my-5 mx-3 logo" src="{% static 'design/logo.png' %}"></a>
+                <a href="/"><img class="my-5 logo_sm" src="{% static 'design/logo1.png' %}"></a>
                 <a class='nav' href="/profile">
-                    <img class="profile-image nav_icon" src="{{ profile.image.url }}">  <text class="nav_link">Profile</text>
+                    <img class="profile-image nav_icon" src="{{ user.image.url }}">  <text class="nav_link">Profile</text>
                 </a><br>
-                <a class='nav' href="/add_post"><img class="nav_icon" src="/static/design/add.png">  <text class="nav_link">Add Post</text></a><br>
-                <a class='nav' href="/logout"><img class="nav_icon" src="/static/design/logout.png">  <text class="nav_link">Logout</text></a><br>
-                <a class='nav' href="/search"><img class="nav_icon" src="/static/design/search.png">  <text class="nav_link">Search</text></a><br>
-                <a class='nav' href="/chats"><img class="nav_icon" src="/static/design/message.png">  <text class="nav_link">Chats</text></a><br>
+                <a class='nav' href="/add_post"><img class="nav_icon" src="{% static 'design/add.png' %}">  <text class="nav_link">Add Post</text></a><br>
+                <a class='nav' href="/logout"><img class="nav_icon" src="{% static 'design/logout.png' %}">  <text class="nav_link">Logout</text></a><br>
+                <a class='nav' href="/search"><img class="nav_icon" src="{% static 'design/search.png' %}">  <text class="nav_link">Search</text></a><br>
+                <a class='nav' href="/chats"><img class="nav_icon" src="{% static 'design/message.png' %}">  <text class="nav_link">Chats</text></a><br>
             </div>
         </div>
         <div class="nav_bar">
@@ -34,10 +35,10 @@
                         <div class="likes" data-id="{{ p.0.id }}">
                             <input type="hidden" class="is_liked" data-for="{{ p.1 }}">
                             <a data-id="{{ p.0.id }}" data-url="/">
-                                <img class="like_btn" data-id="{{ p.0.id }}" data-url="/" src="/static/design/like.png" width="23">
+                                <img class="like_btn" data-id="{{ p.0.id }}" data-url="/" src="{% static 'design/like.png' %}" width="23">
                             </a>
                             <a class="mx-2 my-2" href="/post{{ p.0.id }}">
-                                <img src="/static/design/comment.png" width="23">
+                                <img src="{% static 'design/comment.png' %}" width="23">
                             </a>
                             <p class="my-2 text"><b class="like_amount">{{ p.2 }}</b> likes</p>
                         </div>
@@ -49,7 +50,7 @@
             {% endif %}
         </div>
         <div class="recommend my-4">
-                    <a href="/profile"><img class="profile-image pr-3" src="{{ profile.image.url }}" width="50" height="50"></a>
+                    <a href="/profile"><img class="profile-image pr-3" src="{{ user.image.url }}" width="50" height="50"></a>
                     <a class="profile_link mx-2" href="/profile"><b>{{ user.username }}</b></a><br>
             <h6 class="my-3 info">Recommendations</h6>
             <hr>
