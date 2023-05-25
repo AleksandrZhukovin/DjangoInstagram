@@ -1,42 +1,39 @@
 {% extends 'base.html' %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block import %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'styles/base.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'styles/add_post.css' %}" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="{% static 'js/add_post.js' %}" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
-<body class="body_back">
-    <div class="container my-4">
-        <div class="text-center row my-3 block">
-            <p class="header"><b>Add Post</b></p>
-        </div>
-        <div class="row main">
+<button id="open">Open</button>
+<dialog id="choose">
+    <center><p class="text"><b>Create new post</b></p></center>
+    <hr>
+    <div class="pic">
+        <img src="{% static 'design/picture.png' %}" width="10%"><br>
+            {% csrf_token %}
+            <input type="file" id="id_image" required name="file" class="file_inpt">
+            <button class="file-upload">File upload</button>
+    </div>
+</dialog>
+<dialog id="describe">
 
-                {% if post %}
-                <div class="col-md-8 col-lg-8 main">
-                    <img src="{{ post.image.url }}" width="300">
-                </div>
-                {% else %}
-                <div class="insert_img col-md-8 col-lg-8">
-                    <img src="{% static 'design/add_photo.png' %}">
-                </div>
-                {% endif %}
+    <center><p class="text"><b>Create new post</b></p></center>
+    <hr>
+    <div class="row">
+        <div class="pic ">
+            <img id="image" src="" width="50%"><br>
+            <form method="post" enctype="multipart/form-data">
 
-        </div>
-        <div class="my-3">
-            <div class="text-center">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
                     {% for f in form %}
-                        <p class="text">{{ f.label }}</p>
-                        {{ f }}<br>
+                        <p class="my-3">{{ f }}</p>
                     {% endfor %}
-                    <input class="my-3 file_inpt" type="submit" value="OK">
-                </form>
-            </div>
+            </form>
         </div>
     </div>
-</body>
+</dialog>
 {% endblock %}
