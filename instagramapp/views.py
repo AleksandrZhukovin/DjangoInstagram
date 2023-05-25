@@ -49,18 +49,16 @@ class HomeView(TemplateView):
         return context
 
 
-class AddPostView(CreateView):
+class AddPostView(TemplateView):
     model = Post
     template_name = 'add_post.html'
     form_class = AddPostForm
 
-    def form_valid(self, form):
-        user = self.request.user
-        form.instance.user = user
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return f'edit_post{self.object.id}/'
+    def post(self, request):
+        data = request.FILES['file']
+        with open('instagramapp/static/images/upload_image.png', 'wb') as file:
+            file.write(data.read())
+        return JsonResponse('/static/images/upload_image.png', safe=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
