@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
 from .models import Post, Comment, Like
+from pathlib import Path
+from django.core.files import File
 from accounts.models import User, Follow
 from .forms import SearchForm, CommentForm, AddPostForm, EditPostForm
 from django.views.generic.edit import CreateView, UpdateView, FormView
@@ -36,12 +38,12 @@ class HomeView(TemplateView):
         posts = Post.objects.all()
         wall = []
         for p in posts:
-            if p.user in follow.following.all():
-                try:
-                    Like.objects.get(post=p, user=user)
-                    wall.append([p, 1, len(Like.objects.filter(post=p))])
-                except Like.DoesNotExist:
-                    wall.append([p, 0, len(Like.objects.filter(post=p))])
+            # if p.user in follow.following.all():
+            try:
+                Like.objects.get(post=p, user=user)
+                wall.append([p, 1, len(Like.objects.filter(post=p))])
+            except Like.DoesNotExist:
+                wall.append([p, 0, len(Like.objects.filter(post=p))])
         context['posts'] = wall
         context['title'] = _('Home')
         context['user'] = user
@@ -55,27 +57,23 @@ class AddPostView(TemplateView):
     form_class = AddPostForm
 
     def post(self, request):
-        data = request.FILES['file']
-        with open('instagramapp/static/images/upload_image.png', 'wb') as file:
-            file.write(data.read())
+        data = request.POST
+        if len(data.keys()) == 1:
+            data = request.FILES['file']
+            with open('instagramapp/static/images/upload_image.png', 'wb') as file:
+                file.write(data.read())
+        else:
+            description = data['description']
+            path = Path('instagramapp/static/images/upload_image.png')
+            with path.open(mode='rb') as f:
+                file = File(f, name=path.name)
+                post = Post(description=description, image=file, user=self.request.user)
+                post.save()
         return JsonResponse('/static/images/upload_image.png', safe=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = _('Add Post')
-        return context
-
-
-class EditPostView(UpdateView):
-    model = Post
-    template_name = 'add_post.html'
-    form_class = EditPostForm
-    success_url = reverse_lazy('home')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = _('Add Post')
-        context['post'] = Post.objects.get(id=self.kwargs['pk'])
         return context
 
 
