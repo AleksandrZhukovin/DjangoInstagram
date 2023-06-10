@@ -1,0 +1,55 @@
+.file_inpt {
+  display: none;
+}
+
+#choose {
+    position: fixed;
+    top: 10%;
+    border: 0px;
+    border-radius: 10px;
+    background-color: #303030;
+    width: 40%;
+    height: 70%;
+    animation: appear 0.7s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes appear{
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+.pic {
+    position: absolute;
+    width: 100%;
+    top: 20%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#describe {
+    position: fixed;
+    top: 10%;
+    border: 0px;
+    border-radius: 10px;
+    background-color: #303030;
+    width: 70%;
+    height: 70%;
+    justify-content: center;
+    animation: appear 0.7s;
+    animation-fill-mode: forwards;
+}
+
+.quit_wait {
+    display: none;
+}
+
+.df {
+  outline: none;
+  width: 90%;
+  background-color: #303030;
+  border: 0px solid;
+  color: white;
+  resize: none;
+}
