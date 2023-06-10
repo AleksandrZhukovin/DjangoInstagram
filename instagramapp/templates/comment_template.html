@@ -1,5 +1,5 @@
 {% load static %}
-<div id="{{ comment.id }}" class="comment">
+<div id="{{ comment.id }}" class="comment_block">
     <div style="display: flex;">
         <input type="hidden" class="is_liked" data-for="0">
         <div>
@@ -7,7 +7,7 @@
         </div>
         <div style="width: 500px;">
             <p class="text-white"><a class="profile_link" href="/user_profile/{{ c.0.user.id }}"><b class="mx-2">{{ user.username }}</b></a>
-                {{ comment.body }}<br><a class="sm_info mx-2" id="delete_comment{{ comment.id }}" data-url="/post/{{ post.id }}/" data-id="{{ comment.id }}">Delete</a>
+                {{ comment.body }}<br><a class="text-white-50 mx-2" style="font-size: 11px; text-decoration: none;" id="delete_comment{{ comment.id }}" data-url="/post/{{ post.id }}/" data-id="{{ comment.id }}">Delete</a>
             </p>
         </div>
         <div class="comment_like" data-id="{{ comment.id }}" style="display: flex;">
