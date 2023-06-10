@@ -53,7 +53,7 @@ function addComment(){
 $(function(){
     $(document).click(function(event) {
     b_id = $(event.target);
-    if (b_id.attr('class') == "sm_info mx-2") {
+    if (b_id.attr('class') == "text-white-50 mx-2") {
         $.ajax(b_id.data('url'), {
             'type': 'POST',
             'async': true,
@@ -81,11 +81,11 @@ $(function(){
                     if (data['is_liked'] == 0) {
                         elements.item(i).getElementsByClassName('is_liked').item(0).dataset.for = 0;
                         elements.item(i).getElementsByClassName("comment_like mb-2").item(0).src = "/static/design/like.png";
-                        elements.item(i).getElementsByClassName("sm_info mx-2").item(1).innerHTML = data['like_am'];
+                        elements.item(i).getElementsByClassName("text-white-50 mx-2").item(1).innerHTML = data['like_am'];
                     } else {
                         elements.item(i).getElementsByClassName('is_liked').item(0).dataset.for = 1;
                         elements.item(i).getElementsByClassName("comment_like mb-2").item(0).src = "/static/design/a_like.png";
-                        elements.item(i).getElementsByClassName("sm_info mx-2").item(1).innerHTML = data['like_am'];
+                        elements.item(i).getElementsByClassName("text-white-50 mx-2").item(1).innerHTML = data['like_am'];
                     }
                 }
             }
@@ -99,7 +99,7 @@ $(function(){
 $(function(){
     $(document).click(function(event) {
         b_id = $(event.target);
-        if (b_id.attr('class') == 'post_image my-2' || b_id.attr('class') == 'mx-2 my-2 comment') {
+        if (b_id.attr('class') == 'post_image my-2' || b_id.attr('class') == 'comment_ico') {
             document.getElementById('post').show();
             document.getElementById('quit').classList.remove('quit_wait');
             document.getElementById('main').inert = true;
