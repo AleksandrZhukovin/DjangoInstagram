@@ -1,4 +1,3 @@
-from django.urls import reverse_lazy
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
@@ -7,27 +6,58 @@ from .models import Post, Comment, Like
 from pathlib import Path
 from django.core.files import File
 from accounts.models import User, Follow
-from .forms import SearchForm, CommentForm, AddPostForm, EditPostForm
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from .forms import SearchForm, CommentForm, AddPostForm
+from django.views.generic.edit import CreateView, FormView
 
 
-class HomeView(TemplateView):
+class HomeView(CreateView):
     template_name = 'home.html'
+    form_class = CommentForm
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         post_data = request.POST
-        post = Post.objects.get(id=post_data['like_post'])
         user = self.request.user
-        try:
-            like = Like.objects.get(user=user, post=post)
-            like.delete()
-            data = {'like_am': len(Like.objects.filter(post=post)), 'id': post.id, 'is_liked': 0}
-            return JsonResponse(data, safe=False)
-        except Like.DoesNotExist:
-            like = Like(post=post, user=user)
-            like.save()
-            data = {'like_am': len(Like.objects.filter(post=post)), 'id': post.id, 'is_liked': 1}
-            return JsonResponse(data, safe=False)
+        if 'like_post' in post_data.keys():
+            post = Post.objects.get(id=post_data['like_post'])
+            try:
+                like = Like.objects.get(user=user, post=post)
+                like.delete()
+                data = {'like_am': len(Like.objects.filter(post=post)), 'id': post.id, 'is_liked': 0}
+                return JsonResponse(data, safe=False)
+            except Like.DoesNotExist:
+                like = Like(post=post, user=user)
+                like.save()
+                data = {'like_am': len(Like.objects.filter(post=post)), 'id': post.id, 'is_liked': 1}
+                return JsonResponse(data, safe=False)
+        if 'id' in post_data.keys():
+            post = Post.objects.get(id=post_data['id'])
+            context = {}
+            comments = []
+            n = 0
+            for c in Comment.objects.filter(post=post):
+                comments.append([c])
+                try:
+                    Like.objects.get(comment=c, user=user)
+                    comments[n].append(1)
+                except Like.DoesNotExist:
+                    comments[n].append(0)
+                comments[n].append(len(Like.objects.filter(comment=c)))
+                n += 1
+            context['comments'] = comments
+            likes = []
+            for i in Like.objects.filter(post=post):
+                likes.append(i.user)
+            context['likes'] = likes
+            context['like_amount'] = len(Like.objects.filter(post=post))
+            try:
+                Like.objects.get(post=post, user=user)
+                context['post'] = [post, 1]
+            except Like.DoesNotExist:
+                context['post'] = [post, 0]
+            context['profile'] = user
+            context['form'] = CommentForm()
+            response = render_to_string('post.html', context)
+            return JsonResponse(response, safe=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -38,12 +68,12 @@ class HomeView(TemplateView):
         posts = Post.objects.all()
         wall = []
         for p in posts:
-            # if p.user in follow.following.all():
-            try:
-                Like.objects.get(post=p, user=user)
-                wall.append([p, 1, len(Like.objects.filter(post=p))])
-            except Like.DoesNotExist:
-                wall.append([p, 0, len(Like.objects.filter(post=p))])
+            if p.user in follow.following.all():
+                try:
+                    Like.objects.get(post=p, user=user)
+                    wall.append([p, 1, len(Like.objects.filter(post=p))])
+                except Like.DoesNotExist:
+                    wall.append([p, 0, len(Like.objects.filter(post=p))])
         context['posts'] = wall
         context['title'] = _('Home')
         context['user'] = user
@@ -170,4 +200,4 @@ class PostView(CreateView):
         return context
 
 
-__all__ = ['PostView', 'HomeView', 'AddPostView', 'SearchView', 'EditPostView']
+__all__ = ['PostView', 'HomeView', 'AddPostView', 'SearchView']
