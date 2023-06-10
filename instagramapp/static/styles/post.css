@@ -1,0 +1,52 @@
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: back;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: back;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: back;
+}
+
+.form_e {
+  outline: none;
+  width: 90%;
+  background-color: #303030;
+  border: 0px solid;
+  color: white;
+}
+
+.btn_add {
+  font-size: 15px;
+  outline: none;
+  text-decoration: none;
+  color: white;
+  background-color: #303030;
+  border: 0px;
+}
+
+.btn_add:hover, .btn_add:active {
+    color: #BDBDBD;
+}
+
+#post {
+    width: 85%;
+    height: 85%;
+    position: fixed;
+    top: 2.5%;
+    border: none;
+    border-radius: 10px;
+    background-color: #303030;
+    animation: appear 0.7s;
+    animation-fill-mode: forwards;
+    z-index: 100;
+}
