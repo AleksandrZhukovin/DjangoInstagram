@@ -1,44 +1,48 @@
 {% extends 'base.html' %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block import %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'styles/search.css' %}" type="text/css">
     <script src="{% static 'js/search.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<body class="body_back">
-    <div class="cover">
-        <div class="side_bar">
-            <div class="content">
-                <a href="/"><img class="my-5 mx-3 logo" src="{% static 'design/logo.png' %}"></a>
-                <a href="/"><img class="my-5 logo_sm" src="{% static 'design/logo1.png' %}"></a>
-                <a class='nav' href="/profile">
-                    <img class="profile-image nav_icon" src="{{ profile.image.url }}">  <text class="nav_link">Profile</text>
-                </a><br>
-                <a class='nav' href="/add_post"><img class="nav_icon" src="{% static 'design/add.png' %}">  <text class="nav_link">Add Post</text></a><br>
-                <a class='nav' href="/logout"><img class="nav_icon" src="{% static 'design/logout.png' %}">  <text class="nav_link">Logout</text></a><br>
-                <a class='nav' href="/search"><img class="nav_icon" src="{% static 'design/search.png' %}">  <text class="nav_link">Search</text></a><br>
-                <a class='nav' href="/chats"><img class="nav_icon" src="{% static 'design/message.png' %}">  <text class="nav_link">Chats</text></a><br>
+   <div class="container-fluid">
+        <div class="row" id="main">
+            <div class="side_bar col-md-3 col-lg-2">
+                <div class="content">
+                    <a href="/"><img class="my-5 mx-3 logo" src="{% static 'design/logo.png' %}"></a>
+                    <a href="/"><img class="my-5 logo_sm" src="{% static 'design/logo1.png' %}"></a>
+                    <a class='nav mt-4' href="/profile">
+                        <img class="profile-image nav_icon" src="{{ user.image.url }}">  <text class="nav_link">Profile</text>
+                    </a><br>
+                    <a class='add_post_nav mt-4' id="open"><img class="nav_icon" src="{% static 'design/add.png' %}">  <text class="nav_link">Add Post</text></a><br>
+                    <a class='nav mt-4' href="/logout"><img class="nav_icon" src="{% static 'design/logout.png' %}">  <text class="nav_link">Logout</text></a><br>
+                    <a class='nav mt-4' href="/search"><img class="nav_icon" src="{% static 'design/search.png' %}">  <text class="nav_link">Search</text></a><br>
+                    <a class='nav mt-4' href="/chats"><img class="nav_icon" src="{% static 'design/message.png' %}">  <text class="nav_link">Chats</text></a><br>
+                </div>
             </div>
-        </div>
-        <div class="main my-4">
-            <div class="mx-5">
-                    {% csrf_token %}
-                    {% for f in form %}
-                    {{ f }}
-                    {% endfor %}
-            </div>
-            <div id="result" class="my-4">
 
+            <div class="col-md-3 col-lg-2">
+                <input type="hidden">
+            </div>
+
+             <div class="col-md-7 col-lg-8 my-4">
+                 <div class="mx-5">
+                        {% csrf_token %}
+                        {% for f in form %}
+                        {{ f }}
+                        {% endfor %}
+                 </div>
+                 <div id="result" class="my-4">
+                 </div>
+            </div>
+            <div class="col-md-2 col-lg-2 my-4">
+                <a href="/profile"><img class="profile-image pr-3" src="{{ profile.image.url }}" width="50" height="50"></a>
+                <a class="profile_link mx-2" href="/profile"><b>{{ user.username }}</b></a><br>
+                <h6 class="my-3 text-white-50">Recommendations</h6>
+                <hr>
             </div>
         </div>
-        <div class="recommend my-4">
-            <a href="/profile"><img class="profile-image pr-3" src="{{ profile.image.url }}" width="50" height="50"></a>
-            <a class="profile_link mx-2" href="/profile"><b>{{ user.username }}</b></a><br>
-            <h6 class="my-3 info">Recommendations</h6>
-            <hr>
-        </div>
-    </div>
-
-</body>
+   </div>
 {% endblock %}
