@@ -10,15 +10,12 @@ function closeDialogue() {
     $('#quit').click(function(){
         document.getElementById("choose").close();
         document.getElementById("describe").close();
+        document.getElementById('post').close();
         document.getElementById('main').inert = false;
         document.getElementById('quit').classList.add('quit_wait');
     })
 }
 
-function describeDialog(data) {
-    document.getElementById("describe").show();
-    console.log(data);
-}
 
 function nextDialog(){
     $('#id_image').change(function(){
@@ -40,7 +37,7 @@ function nextDialog(){
             })
 
         document.getElementById("choose").close();
-        describeDialog($("#id_image").val());
+        document.getElementById("describe").show();
     })
 }
 
