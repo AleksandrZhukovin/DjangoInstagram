@@ -16,11 +16,11 @@
                                     <input type="hidden" class="is_liked" data-for="{{ c.1 }}">
                                     <div style="display: flex;">
                                         <div>
-                                            <a href="/user_profile/{{ c.0.user.id }}"><img class="profile-image my-2" src="{{ c.0.profile.image.url }}" width="35" height="35"></a>
+                                            <a href="/user_profile/{{ c.0.user.id }}"><img class="profile-image my-2" src="{{ c.0.user.image.url }}" width="35" height="35"></a>
                                         </div>
                                         <div style="width: 500px;">
                                             <p class="text-white"><a class="profile_link" href="/user_profile/{{ c.0.user.id }}"><b class="mx-2">{{ c.0.user.username }}</b></a>
-                                                {{ c.0.body }}<br><a class="text-white-50 mx-2" style="font-size: 11px; text-decoration: none;" id="delete_comment{{ c.0.id }}" data-url="/post/{{ post.0.id }}/" data-id="{{ c.0.id }}">Delete</a>
+                                                {{ c.0.body }}<br><button class="btn_add mx-2" style="font-size: 11px; color: #E0E0E0;" id="delete_comment{{ c.0.id }}" data-url="/post/{{ post.0.id }}/" data-id="{{ c.0.id }}">Delete</button>
                                             </p>
                                         </div>
                                         <div class="comment_like" data-id="{{ c.0.id }}" style="display: flex;">
