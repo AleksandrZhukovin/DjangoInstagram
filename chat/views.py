@@ -28,15 +28,15 @@ class ChatsView(TemplateView):
 
     def post(self, request):
         data_post = request.POST
+        user = self.request.user
         chat = Chat.objects.get(id=data_post['chat'])
         if 'message' in data_post.keys():
-            user = self.request.user
             message = Message(user=user, chat=chat, body=data_post['message'])
             message.save()
             return JsonResponse({'message': message.body}, safe=False)
         messages = Message.objects.filter(chat=chat)
         form = ChatForm()
-        result = render_to_string('chat.html', {'messages': messages, 'form': form, 'chat': chat})
+        result = render_to_string('chat.html', {'messages': messages, 'form': form, 'chat': chat, 'user': user})
         return JsonResponse(result, safe=False)
 
     def get_context_data(self, **kwargs):
