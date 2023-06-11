@@ -6,7 +6,7 @@ class ChatForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['body']
-        widgets = {'body': forms.TextInput(attrs={'class': "form_e", 'placeholder': 'Type'})}
+        widgets = {'body': forms.TextInput(attrs={'class': "form_msg", 'placeholder': 'Type'})}
 
 
 __all__ = ['ChatForm']
