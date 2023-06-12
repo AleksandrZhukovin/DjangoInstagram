@@ -4,24 +4,54 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'styles/login.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'styles/base.css' %}" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'styles/profile.css' %}" type="text/css">
 {% endblock %}
+
 {% block content %}
-<body class="body_back">
-    <div class="container">
-        <div class="main my-4">
-            <form method="post">
-                {% csrf_token %}
-                {% for f in form %}
-                <p class="label"><b>{{ f.label }}</b></p>
-                {{ f }}
-                {% endfor %}
-                <br><input type="submit" class="btn_e my-3" value="Enter">
-            </form>
-            {% if not personal %}
-                <a class="btn_r my-3" href="/edit_profile_personal/{{ user.id }}">Edit Personal Information</a>
-            {% endif %}
+    <div class="container-fluid">
+        <div class="row" id="main">
+            <div class="side_bar col-md-3 col-lg-2">
+                <div class="content">
+                    <a href="/"><img class="my-5 mx-3 logo" src="{% static 'design/logo.png' %}"></a>
+                    <a href="/"><img class="my-5 logo_sm" src="{% static 'design/logo1.png' %}"></a>
+                    <a class='nav mt-4' href="/profile">
+                        <img class="profile-image nav_icon" src="{{ user.image.url }}">  <text class="nav_link">Profile</text>
+                    </a><br>
+                    <a class='add_post_nav mt-4' id="open"><img class="nav_icon" src="{% static 'design/add.png' %}">  <text class="nav_link">Add Post</text></a><br>
+                    <a class='nav mt-4' href="/logout"><img class="nav_icon" src="{% static 'design/logout.png' %}">  <text class="nav_link">Logout</text></a><br>
+                    <a class='nav mt-4' href="/search"><img class="nav_icon" src="{% static 'design/search.png' %}">  <text class="nav_link">Search</text></a><br>
+                    <a class='nav mt-4' href="/chats"><img class="nav_icon" src="{% static 'design/message.png' %}">  <text class="nav_link">Chats</text></a><br>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-lg-2">
+                <input type="hidden">
+            </div>
+
+            <div class="col-md-9 col-lg-10" style="height: 100vh;">
+                <h4 class="text-white my-5"><b>Settings</b></h4>
+                <div class="container-fluid g-0 settings my-4">
+                    <div class="row g-0" style="height: 100%;">
+                        <div class="set_bar col-3">
+                            <button class="set_nav"><text class="mx-3">Edit Profile</text></button>
+                            <button class="set_nav"><text class="mx-3">Notifications</text></button>
+                        </div>
+                        <div class="col-9">
+                            <form method="post">
+                                {% csrf_token %}
+                                {% for f in form %}
+                                <p class="text-white h6"><b>{{ f.label }}</b></p>
+                                {{ f }}
+                                {% endfor %}
+                                <br><input type="submit" class="btn_e my-3" value="Enter">
+                            </form>
+                            {% if not personal %}
+                                <a class="btn_r my-3" href="/edit_profile_personal/{{ user.id }}">Edit Personal Information</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</body>
 {% endblock %}

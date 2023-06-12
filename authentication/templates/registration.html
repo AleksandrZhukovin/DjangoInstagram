@@ -14,7 +14,7 @@
                 <form method="post">
                     {% csrf_token %}
                     {% for f in form %}
-                    <p class="label"><b>{{ f.label }}</b></p>
+                    <p class="text-white h6"><b>{{ f.label }}</b></p>
                     {{ f }}
                     {% endfor %}
                     <br><input type="submit" class="btn_e my-3" value="Enter">
