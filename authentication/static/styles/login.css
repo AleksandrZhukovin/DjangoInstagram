@@ -6,17 +6,6 @@
   color: white;
 }
 
-.label{
-    color: white;
-    font-size: 17px;
-}
-
-.main{
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    }
-
 .btn_e {
   width: 75px;
   outline: none;
