@@ -8,4 +8,4 @@ version = '2.0'
 dependencies = ['django']
 
 [project.optional-dependencies]
-dev = ['pytest']
+dev = ['pytest', 'Pillow']
