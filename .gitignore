@@ -11,6 +11,7 @@ media
 
 # Distribution / packaging
 .Python build/
+.venv/
 develop-eggs/
 dist/
 downloads/
