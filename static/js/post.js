@@ -40,10 +40,7 @@ function addComment(){
         },
         'success':  function(data){$
             document.getElementById('id_body').value = '';
-
             document.getElementById('comments').innerHTML += data;
-            console.log(document);
-
         }
     })
 })
@@ -53,7 +50,7 @@ function addComment(){
 $(function(){
     $(document).click(function(event) {
     b_id = $(event.target);
-    if (b_id.attr('class') == "text-white-50 mx-2") {
+    if (b_id.attr('class') == "btn_add mx-2") {
         $.ajax(b_id.data('url'), {
             'type': 'POST',
             'async': true,
@@ -103,7 +100,6 @@ $(function(){
             document.getElementById('post').show();
             document.getElementById('quit').classList.remove('quit_wait');
             document.getElementById('main').inert = true;
-            console.log(b_id.data('id'));
             $.ajax('/', {
                 'type': 'POST',
                 'async': true,
@@ -124,7 +120,6 @@ $(function(){
                     }
 
                     var elements = document.getElementsByClassName('block my-2 likes');
-                    console.log(elements);
                     if (elements.item(0).getElementsByClassName('post_is_liked').item(0).getAttribute('data-for') == 0) {
                         elements.item(0).getElementsByClassName("like").item(0).src = "/static/design/like.png";
                     } else {

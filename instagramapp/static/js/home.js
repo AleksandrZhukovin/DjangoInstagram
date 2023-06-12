@@ -1,9 +1,7 @@
 $(function(){
     $(document).click(function(event) {
     b_id = $(event.target);
-    console.log(b_id.attr('class'));
     if (b_id.attr('class') == 'like_btn') {
-    console.log(b_id);
     $.ajax(b_id.data('url'), {
         'type': 'POST',
         'async': true,
