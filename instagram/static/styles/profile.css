@@ -1,0 +1,159 @@
+.fill {
+    display: flex;
+    width: 32%;
+
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
+
+.fill img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.profile-image {
+  border-radius: 50%;
+}
+
+.profile_set:link, .profile_set:visited {
+  font-size: 15px;
+  outline: none;
+  text-decoration: none;
+  color: black;
+  border-radius: 5px;
+  background: white;
+  padding: 7px 15px;
+}
+
+.profile_set:hover, .profile_set:active {
+  background: #dcdbdb;
+  font-size: 15px;
+}
+
+.profile_fol {
+  font-size: 15px;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  background-color: blue;
+  padding: 7px 15px;
+  border: 0px;
+}
+
+
+.profile_unfol {
+  font-size: 15px;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  padding: 7px 15px;
+  border: 3px solid white;
+  background-color: black;
+  border: 1px solid white;
+}
+
+.posts {
+    display: flex;
+    width: 100%;
+}
+
+.profile_info {
+    width: 100%;
+    display: flex;
+    position: relative;
+}
+
+.profile_image {
+    width: 50%;
+    position: relative;
+}
+
+.profile_data {
+    width: 50%;
+    position: relative;
+}
+
+.data {
+    position: absolute;
+    right: 5%;
+}
+
+.profile_ava {
+    position: absolute;
+    height: 100%;
+    right: 5%;
+}
+
+.username {
+    color: white;
+    font-size: 24px;
+}
+
+.sm_pad_r {
+    padding-right: 2%;
+}
+
+.sm_pad_l {
+    padding-left: 2%;
+}
+
+.settings {
+    width: 80%;
+    height: 80%;
+    top: 5%;
+    right: 5%;
+    border: 1px solid #404040;
+}
+
+.set_nav {
+    background-color: black;
+    border: 0px;
+    color: white;
+    width: 100%;
+    text-align: left;
+    padding: 0.5em;
+}
+
+.set_nav:hover {
+    background-color: #101010;
+    border-left: 2px solid #404040;
+}
+
+
+.set_bar {
+    height: 100%;
+    border-right: 1px solid #404040;
+}
+
+@media screen and (max-width: 3000px) {
+    .base {
+        top: 15px;
+        position: absolute;
+        width: 75%;
+        left: 20%;
+    }
+
+}
+
+@media screen and (max-width: 1000px) {
+
+    .base {
+        top: 15px;
+        position: absolute;
+        width: 80%;
+        left: 15%;
+    }
+
+}
+
+@media screen and (max-width: 500px) {
+    .base {
+        top: 15px;
+        position: absolute;
+        width: 100%
+    }
+}
+
+
+

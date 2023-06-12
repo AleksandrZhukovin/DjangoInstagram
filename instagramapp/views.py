@@ -90,16 +90,16 @@ class AddPostView(TemplateView):
         data = request.POST
         if len(data.keys()) == 1:
             data = request.FILES['file']
-            with open('instagramapp/static/images/upload_image.png', 'wb') as file:
+            with open('media/static/images/upload_image.png', 'wb') as file:
                 file.write(data.read())
         else:
             description = data['description']
-            path = Path('instagramapp/static/images/upload_image.png')
+            path = Path('media/static/images/upload_image.png')
             with path.open(mode='rb') as f:
                 file = File(f, name=path.name)
                 post = Post(description=description, image=file, user=self.request.user)
                 post.save()
-        return JsonResponse('/static/images/upload_image.png', safe=False)
+        return JsonResponse('media/static/images/upload_image.png', safe=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,0 +1,33 @@
+.log_f{
+  outline: none;
+  width: 50%;
+  background-color: #909090;
+  border: 1px solid black;
+  color: white;
+}
+
+.btn_e {
+  width: 75px;
+  outline: none;
+  background-color: #1A64F7;
+  border-radius: 13px;
+  color: white;
+  border: 0px;
+}
+
+.btn_r:link, .btn_r:visited {
+  font-size: 13px;
+  outline: none;
+  text-decoration: none;
+  background-color: white;
+  border-radius: 13px;
+  padding: 7px 15px;
+  color: black;
+  border: 0px;
+}
+
+.btn_r:hover, .btn_r:active {
+
+  background-color: #a5a5a5;
+
+}
