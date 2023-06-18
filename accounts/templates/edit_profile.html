@@ -5,48 +5,112 @@
     <link rel="stylesheet" href="{% static 'styles/login.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'styles/base.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'styles/profile.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'styles/edit_profile.css' %}" type="text/css">
+    <script src="{% static 'js/edit_prof.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="row" id="main">
-            <div class="side_bar col-md-3 col-lg-2">
-                <div class="content">
-                    <a href="/"><img class="my-5 mx-3 logo" src="{% static 'design/logo.png' %}"></a>
-                    <a href="/"><img class="my-5 logo_sm" src="{% static 'design/logo1.png' %}"></a>
-                    <a class='nav mt-4' href="/profile">
-                        <img class="profile-image nav_icon" src="{{ user.image.url }}">  <text class="nav_link">Profile</text>
-                    </a><br>
-                    <a class='add_post_nav mt-4' id="open"><img class="nav_icon" src="{% static 'design/add.png' %}">  <text class="nav_link">Add Post</text></a><br>
-                    <a class='nav mt-4' href="/logout"><img class="nav_icon" src="{% static 'design/logout.png' %}">  <text class="nav_link">Logout</text></a><br>
-                    <a class='nav mt-4' href="/search"><img class="nav_icon" src="{% static 'design/search.png' %}">  <text class="nav_link">Search</text></a><br>
-                    <a class='nav mt-4' href="/chats"><img class="nav_icon" src="{% static 'design/message.png' %}">  <text class="nav_link">Chats</text></a><br>
+    <div class="col-md-9 col-lg-10" >
+        <h4 class="text-white my-5 mx-3"><b>Settings</b></h4>
+        <div class="container-fluid g-0 settings my-4">
+            <div class="row g-0" style="height: 100%;">
+                <div class="set_bar col-3">
+                    <div class="top_info">
+                        <img class="my-2 mx-2" style="width: 55%;" src="{% static 'design/logo.png' %}">
+                        <p class="text-white h6 mx-3">Account Center</p>
+                        <p class="text-white mx-3" style="font-size: 12px">Manage your connected experiences and account settings across DjangoGram technologies.</p>
+                    </div>
+                    <button class="set_nav"><text class="mx-3"><a href="/edit_profile" style="text-decoration: none; width: 100%; color: white;">Edit Profile</a></text></button>
+                    <button class="set_nav"><text class="mx-3"><a href="/personal_info" style="text-decoration: none; width: 100%; color: white;">Personal Information</a></text></button>
+                    <button class="set_nav"><text class="mx-3"><a href="/security" style="text-decoration: none; width: 100%; color: white;">Security</a></text></button>
+                    <button class="set_nav"><text class="mx-3"><a href="/notifications" style="text-decoration: none; width: 100%; color: white;">Notifications</a></text></button>
+                    <button class="set_nav"><text class="mx-3"><a href="/profile_info" style="text-decoration: none; width: 100%; color: white;">Profile Info</a></text></button>
                 </div>
-            </div>
-
-            <div class="col-md-3 col-lg-2">
-                <input type="hidden">
-            </div>
-
-            <div class="col-md-9 col-lg-10" style="height: 100vh;">
-                <h4 class="text-white my-5"><b>Settings</b></h4>
-                <div class="container-fluid g-0 settings my-4">
-                    <div class="row g-0" style="height: 100%;">
-                        <div class="set_bar col-3">
-                            <button class="set_nav"><text class="mx-3">Edit Profile</text></button>
-                            <button class="set_nav"><text class="mx-3">Notifications</text></button>
+                <input type="hidden" id="url_info" value="{{ url }}">
+                {% csrf_token %}
+                <div class="col-9">
+                    <div class="container" style="height: 100%;">
+                        <div class="row">
+                            <div class="col-4">
+                                <h4 class="text-white my-5 float-end">{{ header }}</h4>
+                            </div>
                         </div>
-                        <div class="col-9">
-                            <form method="post">
-                                {% csrf_token %}
-                                {% for f in form %}
-                                <p class="text-white h6"><b>{{ f.label }}</b></p>
+                        <div class="row">
+                            <div id="errors" class="col-4">
+                            </div>
+                        </div>
+                        {% if session_time %}
+                        <div class="row mt-4">
+                            <div class="col-4">
+                                <img class="profile-image float-end" width="70" height='70' src="{{ user.image.url }}">
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-4">
+                                <p class="text-white h6 float-end"><b>Username:</b></p>
+                            </div>
+                            <div class="col mx-5">
+                                <p class="text-white h6">{{ user.username }}</p>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-4">
+                                <p class="text-white h6 float-end"><b>Joined:</b></p>
+                            </div>
+                            <div class="col mx-5">
+                                <p class="text-white h6">{{ session_time }}</p>
+                            </div>
+                        </div>
+                         <div class="row mt-4">
+                            <div class="col-4">
+                                <p class="text-white h6 float-end"><b>First Name:</b></p>
+                            </div>
+                            <div class="col mx-5">
+                                <p class="text-white h6">{{ user.first_name }}</p>
+                            </div>
+                        </div>
+                         <div class="row mt-4">
+                            <div class="col-4">
+                                <p class="text-white h6 float-end"><b>Second Name:</b></p>
+                            </div>
+                            <div class="col mx-5">
+                                <p class="text-white h6">{{ user.last_name }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% for f in form %}
+                        {% if f.label != 'Image' %}
+                        <div class="row mt-4">
+                            <div class="col-4">
+                                <p class="text-white h6 float-end"><b>{{ f.label }}</b></p>
+                            </div>
+                            <div class="col mx-5">
                                 {{ f }}
-                                {% endfor %}
-                                <br><input type="submit" class="btn_e my-3" value="Enter">
+                            </div>
+                        </div>
+                        {% else %}
+                            <form enctype="multipart/form-data">
+                                {{ f }}
                             </form>
-                            {% if not personal %}
-                                <a class="btn_r my-3" href="/edit_profile_personal/{{ user.id }}">Edit Personal Information</a>
+                            <div class="row">
+                                <div class="col-4">
+                                    <img id="profile_image" class="profile-image float-end" width="70" height="70" src="{{ user.image.url }}">
+                                </div>
+                                <div class="col mx-5">
+                                    <p class="text-white my-0 mx-1">{{ user.username }}</p>
+                                    <button id="change_img" class="ch_p_img">Change Profile Image</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% endfor %}
+                        <div class="row mt-4">
+                            <div class="col-4">
+                                <input type="hidden">
+                            </div>
+                            {% if form %}
+                            <div class="col mx-5">
+                                <button id="submit" data-for="{{ " class="btn btn-primary mt-3 mb-5">Submit</button>
+                            </div>
                             {% endif %}
                         </div>
                     </div>
@@ -54,4 +118,29 @@
             </div>
         </div>
     </div>
+
+    <div id="success" class="success_msg">
+        <p class="text-white h6 my-1 mx-5">Profile Updated</p>
+    </div>
+{% endblock %}
+{% block extra %}
+    <dialog id="gender">
+        <div class="head text-center">
+            <p class="text-white h6">Gender</p>
+        </div>
+
+            <fieldset>
+                <input type="radio" id="male" value="Male" name="gender">
+                <label class="text-white" for="male">Male</label><br>
+                <input type='radio' id="female" value="Female" name="gender">
+                <label class="text-white" for="female">Female</label><br>
+                <input type="radio" id='custom' value="Custom" name="gender">
+                <label class="text-white" for="custom">Custom</label><br>
+            </fieldset>
+            <hr>
+            <div class="text-center">
+                <button class="btn btn-primary float-middle" id="enter_gender">Enter</button>
+            </div>
+
+    </dialog>
 {% endblock %}

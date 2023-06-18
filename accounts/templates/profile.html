@@ -7,52 +7,30 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="row" id="main">
-            <div class="side_bar col-md-3 col-lg-2">
-                <div class="content">
-                    <a href="/"><img class="my-5 mx-3 logo" src="{% static 'design/logo.png' %}"></a>
-                    <a href="/"><img class="my-5 logo_sm" src="{% static 'design/logo1.png' %}"></a>
-                    <a class='nav mt-4' href="/profile">
-                        <img class="profile-image nav_icon" src="{{ user.image.url }}">  <text class="nav_link">Profile</text>
-                    </a><br>
-                    <a class='add_post_nav mt-4' id="open"><img class="nav_icon" src="{% static 'design/add.png' %}">  <text class="nav_link">Add Post</text></a><br>
-                    <a class='nav mt-4' href="/logout"><img class="nav_icon" src="{% static 'design/logout.png' %}">  <text class="nav_link">Logout</text></a><br>
-                    <a class='nav mt-4' href="/search"><img class="nav_icon" src="{% static 'design/search.png' %}">  <text class="nav_link">Search</text></a><br>
-                    <a class='nav mt-4' href="/chats"><img class="nav_icon" src="{% static 'design/message.png' %}">  <text class="nav_link">Chats</text></a><br>
-                </div>
+    <div class="col-md-9 col-lg-10">
+        <div class="block profile_info">
+            <div class="my-3 profile_image">
+                <img class="profile_ava" src="{{ user.image.url }}">
             </div>
-
-            <div class="col-md-3 col-lg-2">
-                <input type="hidden">
-            </div>
-
-            <div class="col-md-9 col-lg-10">
-                <div class="block profile_info">
-                    <div class="my-3 profile_image">
-                        <img class="profile_ava" src="{{ user.image.url }}">
+        <div class="profile_data">
+            <p class="my-3 username"><b class="sm_pad_r">{{ user.username }}</b>
+                <a class="profile_set" href="/edit_profile"><b>Edit Profile</b></a>
+            </p>
+            <p class="text-white my-3"><b>{{ post_am }}</b> posts <b class="sm_pad_l">{{ followers }}</b> followers <b class="sm_pad_l">{{ following }}</b> following</p>
+            <p class="text-white my-3"><b>{{ user.first_name}} {{ user.last_name }}</b><br>{{ profile.status }}</p>
+        </div>
+    </div>
+    <div>
+        <p class="my-3 text-center text-white">Posts</p>
+    </div>
+        <div class="posts">
+            {% if posts %}
+                {% for p in posts %}
+                    <div class="fill mx-1">
+                        <a><img class="post_image my-2" data-id="{{ p.id }}" src="{{ p.image.url }}"></a>
                     </div>
-                <div class="profile_data">
-                    <p class="my-3 username"><b class="sm_pad_r">{{ user.username }}</b>
-                        <a class="profile_set" href="/edit_profile/{{ user.id }}"><b>Edit Profile</b></a>
-                    </p>
-                    <p class="text-white my-3"><b>{{ post_am }}</b> posts <b class="sm_pad_l">{{ followers }}</b> followers <b class="sm_pad_l">{{ following }}</b> following</p>
-                    <p class="text-white my-3"><b>{{ user.first_name}} {{ user.last_name }}</b><br>{{ profile.status }}</p>
-                </div>
-            </div>
-            <div>
-                <p class="my-3 text-center text-white">Posts</p>
-            </div>
-                <div class="posts">
-                    {% if posts %}
-                        {% for p in posts %}
-                            <div class="fill mx-1">
-                                <a><img class="post_image my-2" data-id="{{ p.id }}" src="{{ p.image.url }}"></a>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-            </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -8,53 +8,31 @@
 {% endblock %}
 
 {% block content %}
-     <div class="container-fluid">
-        <div class="row" id="main">
-            <div class="side_bar col-md-3 col-lg-2">
-                <div class="content">
-                    <a href="/"><img class="my-5 mx-3 logo" src="{% static 'design/logo.png' %}"></a>
-                    <a href="/"><img class="my-5 logo_sm" src="{% static 'design/logo1.png' %}"></a>
-                    <a class='nav mt-4' href="/profile">
-                        <img class="profile-image nav_icon" src="{{ user.image.url }}">  <text class="nav_link">Profile</text>
-                    </a><br>
-                    <a class='add_post_nav mt-4' id="open"><img class="nav_icon" src="{% static 'design/add.png' %}">  <text class="nav_link">Add Post</text></a><br>
-                    <a class='nav mt-4' href="/logout"><img class="nav_icon" src="{% static 'design/logout.png' %}">  <text class="nav_link">Logout</text></a><br>
-                    <a class='nav mt-4' href="/search"><img class="nav_icon" src="{% static 'design/search.png' %}">  <text class="nav_link">Search</text></a><br>
-                    <a class='nav mt-4' href="/chats"><img class="nav_icon" src="{% static 'design/message.png' %}">  <text class="nav_link">Chats</text></a><br>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-lg-2">
-                <input type="hidden">
-            </div>
-
-            <div class="col-lg-10 col-md-9">
-                {% csrf_token %}
-                <div class="container">
-                    <div class="row">
-                        <div class="col-4" style="height: 100vh; border-right: 1px solid #404040;">
-                            <div class="mt-5">
-                                <a href="/profile" class="profile_link" style="font-size: 25px;"><b>{{ user.username }}</b></a>
+    <div class="col-lg-10 col-md-9">
+        {% csrf_token %}
+        <div class="container">
+            <div class="row">
+                <div class="col-4" style="height: 100vh; border-right: 1px solid #404040;">
+                    <div class="mt-5">
+                        <a href="/profile" class="profile_link" style="font-size: 25px;"><b>{{ user.username }}</b></a>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-white h6"><b>Messages</b></p>
+                        {% if chats %}
+                            {% for c in chats %}
+                            <div class="my-3">
+                                <a data-url="/chats/" data-id="{{ c.0.id }}">
+                                    <img class="profile-image pr-3" src="{{ c.1.image.url }}" width="50" height="50">
+                                </a>
+                                <button data-url="/chats/" data-id="{{ c.0.id }}" class="btn_snd open mx-2">
+                                    Chat: {{ c.1.username }}
+                                </button>
                             </div>
-                            <div class="mt-4">
-                                <p class="text-white h6"><b>Messages</b></p>
-                                {% if chats %}
-                                    {% for c in chats %}
-                                    <div class="my-3">
-                                        <a data-url="/chats/" data-id="{{ c.0.id }}">
-                                            <img class="profile-image pr-3" src="{{ c.1.image.url }}" width="50" height="50">
-                                        </a>
-                                        <button data-url="/chats/" data-id="{{ c.0.id }}" class="btn_snd open mx-2">
-                                            Chat: {{ c.1.username }}
-                                        </button>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div id="chat" class="col-8"></div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
+                <div id="chat" class="col-8"></div>
             </div>
         </div>
     </div>
