@@ -3,9 +3,10 @@ from django.views.generic.base import TemplateView
 from django.http import JsonResponse
 from accounts.models import User, Follow
 from instagramapp.models import Post
-from django.urls import reverse_lazy
-from django.views.generic.edit import UpdateView
-from .forms import EditProfileForm
+from pathlib import Path
+from django.core.files import File
+from .forms import EditProfileForm, EditProfilePersonalForm, EditSecurityForm, EditNotificationsForm
+from django.db.utils import IntegrityError
 
 
 class ProfileView(TemplateView):
@@ -24,39 +25,132 @@ class ProfileView(TemplateView):
         return context
 
 
-class EditProfileView(UpdateView):
-    model = User
+class EditProfileView(TemplateView):
     template_name = 'edit_profile.html'
-    fields = ['status', 'image']
-    success_url = reverse_lazy('profile')
-
-    def get_initial(self):
-        initial = super().get_initial()
-        user = self.request.user
-        initial['status'] = user.status
-        return initial
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['personal'] = False
         context['user'] = self.request.user
+        context['form'] = EditProfileForm()
+        context['header'] = 'Edit Profile'
+        context['url'] = '/edit_profile/'
+        return context
+
+    def post(self, request):
+        user = self.request.user
+        data = request.POST
+        if 'bio' in data.keys():
+            if 'file' in request.FILES.keys():
+                data_f = request.FILES['file']
+                with open('instagram/static/images/upload_image.png', 'wb') as file:
+                    file.write(data_f.read())
+                path = Path(f'instagram/static/images/upload_image.png')
+                with path.open(mode='rb') as f:
+                    file = File(f, name=path.name)
+                    user_mod = User.objects.get(id=user.id)
+                    user_mod.image = file
+                    user_mod.bio = data['bio']
+                    user_mod.gender = data['gender']
+                    user_mod.website = data['website']
+                    user_mod.save()
+                    response = {'bio': user_mod.bio, 'gender': user_mod.gender, 'website': user_mod.website,
+                                'image': '/static/images/upload_image.png'}
+                    return JsonResponse(response, safe=False)
+            else:
+                user_mod = User.objects.get(id=user.id)
+                user_mod.bio = data['bio']
+                user_mod.gender = data['gender']
+                user_mod.website = data['website']
+                user_mod.save()
+                response = {'bio': user_mod.bio, 'gender': user_mod.gender, 'website': user_mod.website}
+                return JsonResponse(response, safe=False)
+        if len(data.keys()) == 1:
+            response = {'bio': user.bio, 'gender': user.gender, 'website': user.website, 'select': 'profile'}
+            return JsonResponse(response, safe=False)
+
+
+class EditProfilePersonalView(TemplateView):
+    template_name = 'edit_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['form'] = EditProfilePersonalForm()
+        context['header'] = 'Personal'
+        context['url'] = '/personal_info/'
+        return context
+
+    def post(self, request):
+        user = self.request.user
+        data = request.POST
+        if len(data.keys()) == 1:
+            response = {'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name,
+                        'select': 'personal'}
+            return JsonResponse(response, safe=False)
+        else:
+            user_mod = User.objects.get(id=user.id)
+            user_mod.username = data['username']
+            user_mod.first_name = data['first_name']
+            user_mod.last_name = data['last_name']
+            try:
+                user_mod.save()
+            except IntegrityError:
+                return JsonResponse({'error': 'Username already exists!'}, safe=False)
+            response = {'username': user_mod.username, 'first_name': user_mod.first_name, 'last_name': user_mod.last_name,
+                        'select': 'personal'}
+            return JsonResponse(response, safe=False)
+
+
+class EditSecurityView(TemplateView):
+    template_name = 'edit_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['form'] = EditSecurityForm()
+        context['header'] = 'Security'
+        context['url'] = '/security/'
         return context
 
 
-class EditProfilePersonalView(UpdateView):
-    model = User
+class EditNotificationsView(TemplateView):
     template_name = 'edit_profile.html'
-    form_class = EditProfileForm
-    success_url = reverse_lazy('profile')
 
-    def get_initial(self):
-        initial = super().get_initial()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['form'] = EditNotificationsForm()
+        context['header'] = 'Notifications'
+        context['url'] = '/notifications/'
+        return context
+
+    def post(self, request):
         user = self.request.user
-        initial['username'] = user.username
-        initial['first_name'] = user.first_name
-        initial['last_name'] = user.last_name
-        initial['email'] = user.email
-        return initial
+        data = request.POST
+        if len(data.keys()) == 1:
+            response = {'email': user.email, 'select': 'notifications'}
+            return JsonResponse(response, safe=False)
+        else:
+            user_mod = User.objects.get(id=user.id)
+            user_mod.email = data['email']
+            try:
+                user_mod.save()
+            except IntegrityError:
+                return JsonResponse({'error': 'There is already an account with such email!'}, safe=False)
+            response = {'email': user_mod.email, 'select': 'personal'}
+            return JsonResponse(response, safe=False)
+
+
+class ProfileInfoView(TemplateView):
+    template_name = 'edit_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['header'] = 'Profile Info'
+        context['session_time'] = self.request.user.date_joined.strftime('%d.%m.%Y at %H:%M:%S')
+        context['url'] = '/profile_info/'
+        return context
 
 
 class UserProfileView(TemplateView):
