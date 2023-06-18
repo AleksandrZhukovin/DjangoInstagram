@@ -1,0 +1,74 @@
+.text_field {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+    width: 70%;
+    height: 1.9em;
+    padding: 10px;
+}
+
+.bio {
+  width: 70%;
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 5px;
+  color: white;
+  resize: none;
+  padding: 10px;
+}
+
+.ch_p_img {
+    background-color: black;
+    color: blue;
+    border: 0px;
+    text-align: left;
+}
+
+.ch_p_img:hover {
+    color: white;
+}
+
+.top_info {
+    width: 100%;
+    border-bottom: 1px solid #404040;
+}
+
+.img_upload {
+    display: none;
+}
+
+.success_msg {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: 2em;
+    opacity: 0;
+    background-color: #303030;
+}
+
+.success_anim {
+    animation-duration: 7s;
+    animation-name: animate-fade;
+}
+
+@keyframes animate-fade {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+#gender {
+    width: 50%;
+    height: 28%;
+    border: none;
+    border-radius: 10px;
+    background-color: #303030;
+    position: fixed;
+    top: 30%;
+}
+
+.head {
+    border-bottom: 1px solid #404040;
+    width: 100%;
+}
